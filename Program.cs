@@ -77,7 +77,7 @@ namespace expression {
                 case Div a:
                     return a.Left.Calculate(env) / a.Right.Calculate(env);
                 case Bind b:
-                    // NOTE: it may be better to use some persistent data structure instead of Dictionary
+                    // NOTE: it may be better to use some persistent data structures instead of Dictionary
                     var newEnv = new Environment(env);
                     newEnv[b.Variable] = b.VarBody.Calculate(env);
                     return b.ExprBody.Calculate(newEnv);
