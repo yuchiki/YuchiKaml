@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace expression {
-    using Environment = IDictionary<string, int>;
+    using Environment = Dictionary<string, int>;
     class Program {
         static void Main(string[] args) {
             var e =
@@ -11,16 +11,12 @@ namespace expression {
                     "x",
                     new Add(
                         new CInt(3),
-                        new CInt(5)
-                    ),
+                        new CInt(5)),
                     new Add(
                         new CInt(2),
                         new Mul(
                             new Var("x"),
-                            new CInt(5)
-                        )
-                    )
-                );
+                            new CInt(5))));
             Console.WriteLine($"{e} ==> {e.Calculate()}");
         }
     }
@@ -29,6 +25,14 @@ namespace expression {
         expression e ::= n | x | e + e | e * e | e - e | e / e | x = e in e
      */
     public abstract class Expr {}
+
+    abstract class BinOperator : Expr {
+        string Symbol { get; }
+        public Expr Left { get; }
+        public Expr Right { get; }
+        public BinOperator(string symbol, Expr left, Expr right) => (Symbol, Left, Right) = (symbol, left, right);
+        public override string ToString() => $"({Left}) {Symbol} ({Right})";
+    }
 
     class CInt : Expr {
         public int Value { get; }
@@ -40,14 +44,6 @@ namespace expression {
         public string Name { get; }
         public Var(string name) => Name = name;
         public override string ToString() => Name;
-    }
-
-    abstract class BinOperator : Expr {
-        string Symbol { get; }
-        public Expr Left { get; }
-        public Expr Right { get; }
-        public BinOperator(string symbol, Expr left, Expr right) => (Symbol, Left, Right) = (symbol, left, right);
-        public override string ToString() => $"({Left}) {Symbol} ({Right})";
     }
 
     class Add : BinOperator { public Add(Expr left, Expr right) : base("+", left, right) {} }
@@ -82,7 +78,7 @@ namespace expression {
                     return a.Left.Calculate(env) / a.Right.Calculate(env);
                 case Bind b:
                     // NOTE: it may be better to use some persistent data structure instead of Dictionary
-                    var newEnv = new Dictionary<string, int>(env);
+                    var newEnv = new Environment(env);
                     newEnv[b.Variable] = b.VarBody.Calculate(env);
                     return b.ExprBody.Calculate(newEnv);
                 default:
@@ -90,6 +86,6 @@ namespace expression {
             }
         }
 
-        public static int Calculate(this Expr e) => e.Calculate(new Dictionary<string, int>());
+        public static int Calculate(this Expr e) => e.Calculate(new Environment());
     }
 }
