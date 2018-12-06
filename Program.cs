@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace expression {
-    using Environment = Dictionary<string, int>;
+    using Environment = Dictionary<string, Expr>;
     class Program {
         static void Main(string[] args) {
             var e =
@@ -22,7 +22,7 @@ namespace expression {
     }
 
     /*
-        expression e ::= n | x | e + e | e * e | e - e | e / e | x = e in e
+        expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e
      */
     public abstract class Expr {}
 
@@ -61,21 +61,37 @@ namespace expression {
     }
 
     public static class ExprExtensions {
-        public static int Calculate(this Expr e, Environment env) {
+        public static Expr Calculate(this Expr e, Environment env) {
             // NOTE: I want to use switch expression if C# 8.0 get released.
             switch (e) {
                 case CInt ci:
-                    return ci.Value;
+                    return ci;
                 case Var v:
                     return env[v.Name];
                 case Add a:
-                    return a.Left.Calculate(env) + a.Right.Calculate(env);
+                    {
+                        CInt left = (CInt) a.Left.Calculate(env);
+                        CInt right = (CInt) a.Right.Calculate(env);
+                        return new CInt(left.Value + right.Value);
+                    }
                 case Mul a:
-                    return a.Left.Calculate(env) * a.Right.Calculate(env);
+                    {
+                        CInt left = (CInt) a.Left.Calculate(env);
+                        CInt right = (CInt) a.Right.Calculate(env);
+                        return new CInt(left.Value + right.Value);
+                    }
                 case Sub a:
-                    return a.Left.Calculate(env) - a.Right.Calculate(env);
+                    {
+                        CInt left = (CInt) a.Left.Calculate(env);
+                        CInt right = (CInt) a.Right.Calculate(env);
+                        return new CInt(left.Value + right.Value);
+                    }
                 case Div a:
-                    return a.Left.Calculate(env) / a.Right.Calculate(env);
+                    {
+                        CInt left = (CInt) a.Left.Calculate(env);
+                        CInt right = (CInt) a.Right.Calculate(env);
+                        return new CInt(left.Value + right.Value);
+                    }
                 case Bind b:
                     // NOTE: it may be better to use some persistent data structures instead of Dictionary
                     var newEnv = new Environment(env);
@@ -86,6 +102,6 @@ namespace expression {
             }
         }
 
-        public static int Calculate(this Expr e) => e.Calculate(new Environment());
+        public static Expr Calculate(this Expr e) => e.Calculate(new Environment());
     }
 }
