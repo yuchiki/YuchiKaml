@@ -8,21 +8,28 @@ namespace expression {
         static void Main(string[] args) {
             var e =
                 new Bind(
-                    "x",
-                    new Add(
-                        new CInt(3),
-                        new CInt(5)),
-                    new Add(
-                        new CInt(2),
+                    "twice",
+                    new Abs(
+                        "x",
                         new Mul(
                             new Var("x"),
-                            new CInt(5))));
+                            new CInt(2))),
+                    new Add(
+                        new CInt(2),
+                        new Add(
+                            new CInt(2),
+                            new App(
+                                new Var("twice"),
+                                new CInt(30)))));
             Console.WriteLine($"{e} ==> {e.Calculate()}");
         }
     }
 
     /*
-        expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e
+        expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e | \x -> e | e e
+            | b | e && e | e || e | !e //TODO
+            | e == e | e != e | e <= e | e < e | e >= e | e > e  //TODO
+            | if e then e else e  //TODO
      */
     public abstract class Expr {}
 
@@ -60,6 +67,21 @@ namespace expression {
         public override string ToString() => $"let {Variable} = {VarBody} in {ExprBody}";
     }
 
+    class Abs : Expr {
+        public string Variable { get; }
+        public Expr Body { get; }
+        public Abs(string variable, Expr body) => (Variable, Body) = (variable, body);
+
+        public override string ToString() => $"\\{Variable} -> {Body}";
+    }
+
+    class App : Expr {
+        public Expr Left { get; }
+        public Expr Right { get; }
+        public App(Expr left, Expr right) => (Left, Right) = (left, right);
+        public override string ToString() => $"({Left}) ({Right})";
+    }
+
     public static class ExprExtensions {
         public static Expr Calculate(this Expr e, Environment env) {
             // NOTE: I want to use switch expression if C# 8.0 get released.
@@ -78,30 +100,44 @@ namespace expression {
                     {
                         CInt left = (CInt) a.Left.Calculate(env);
                         CInt right = (CInt) a.Right.Calculate(env);
-                        return new CInt(left.Value + right.Value);
+                        return new CInt(left.Value * right.Value);
                     }
                 case Sub a:
                     {
                         CInt left = (CInt) a.Left.Calculate(env);
                         CInt right = (CInt) a.Right.Calculate(env);
-                        return new CInt(left.Value + right.Value);
+                        return new CInt(left.Value - right.Value);
                     }
                 case Div a:
                     {
                         CInt left = (CInt) a.Left.Calculate(env);
                         CInt right = (CInt) a.Right.Calculate(env);
-                        return new CInt(left.Value + right.Value);
+                        return new CInt(left.Value / right.Value);
                     }
                 case Bind b:
-                    // NOTE: it may be better to use some persistent data structures instead of Dictionary
-                    var newEnv = new Environment(env);
-                    newEnv[b.Variable] = b.VarBody.Calculate(env);
+                    var newEnv = env.AddAndCopy(b.Variable, b.VarBody.Calculate(env));
                     return b.ExprBody.Calculate(newEnv);
+                case Abs abs:
+                    return abs;
+                case App app:
+                    {
+                        var left = (Abs) app.Left.Calculate(env);
+                        var right = app.Right.Calculate(env);
+                        return left.Body.Calculate(env.AddAndCopy(left.Variable, right));
+                    }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-
         public static Expr Calculate(this Expr e) => e.Calculate(new Environment());
+    }
+
+    public static class EnvironmentExtension {
+        // NOTE: it may be better to use some persistent data structures instead of Dictionary
+        public static Environment AddAndCopy(this Environment env, string variable, Expr value) {
+            var newEnv = new Environment(env);
+            newEnv[variable] = value;
+            return newEnv;
+        }
     }
 }
