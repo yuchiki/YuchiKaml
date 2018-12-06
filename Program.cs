@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace expression {
-    using Environment = Dictionary<string, Expr>;
+    using Environment = Dictionary<string, Value>;
     class Program {
         static void Main(string[] args) {
             var e1 =
@@ -44,6 +44,28 @@ namespace expression {
             | e == e | e != e | e <= e | e < e | e >= e | e > e
             | if e then e else e  //TODO
      */
+
+    public abstract class Value {}
+
+    public class VInt : Value {
+        public int Value { get; }
+        public VInt(int value) => Value = value;
+        public override string ToString() => $"{Value}";
+    }
+    public class VBool : Value {
+        public bool Value { get; }
+        public VBool(bool value) => Value = value;
+        public override string ToString() => $"{Value}";
+    }
+
+    public class Closure : Value {
+        public Environment Env { get; }
+        public string Variable { get; }
+        public Expr Body { get; }
+
+        public Closure(Environment env, string variable, Expr body) => (Env, Variable, Body) = (env, variable, body);
+    }
+
     public abstract class Expr {}
 
     abstract class BinOperator : Expr {
@@ -127,13 +149,13 @@ namespace expression {
     }
 
     public static class ExprExtensions {
-        public static Expr Calculate(this Expr e, Environment env) {
+        public static Value Calculate(this Expr e, Environment env) {
             // NOTE: I want to use switch expression if C# 8.0 get released.
             switch (e) {
                 case CInt ci:
-                    return ci;
+                    return new VInt(ci.Value);
                 case CBool cb:
-                    return cb;
+                    return new VBool(cb.Value);
                 case Var v:
                     return env[v.Name];
                 case Add a:
@@ -163,22 +185,22 @@ namespace expression {
                 case Bind b:
                     var newEnv = env.AddAndCopy(b.Variable, b.VarBody.Calculate(env));
                     return b.ExprBody.Calculate(newEnv);
-                case Abs abs: //FIXME use closure. this definition has a bug, using wrong environment.
-                    return abs;
+                case Abs abs:
+                    return new Closure(env, abs.Variable, abs.Body);
                 case Not n:
                     {
-                        var b = (CBool) n.Body.Calculate(env);
-                        return new CBool(!(b.Value));
+                        var b = (VBool) n.Body.Calculate(env);
+                        return new VBool(!(b.Value));
                     }
                 case App app:
                     {
-                        var left = (Abs) app.Left.Calculate(env);
+                        var left = (Closure) app.Left.Calculate(env);
                         var right = app.Right.Calculate(env);
-                        return left.Body.Calculate(env.AddAndCopy(left.Variable, right));
+                        return left.Body.Calculate(left.Env.AddAndCopy(left.Variable, right));
                     }
                 case If ifExpr:
                     {
-                        var condition = (CBool) ifExpr.Condition.Calculate(env);
+                        var condition = (VBool) ifExpr.Condition.Calculate(env);
                         if (condition.Value) {
                             return ifExpr.Left.Calculate(env);
                         } else {
@@ -190,30 +212,30 @@ namespace expression {
             }
         }
 
-        public static Expr Calculate(this Expr e) => e.Calculate(new Environment());
+        public static Value Calculate(this Expr e) => e.Calculate(new Environment());
 
-        static CInt BinOpCalculate(Expr left, Expr right, Func<int, int, int> f, Environment env) {
-            var l = (CInt) left.Calculate(env);
-            var r = (CInt) right.Calculate(env);
-            return new CInt(f(l.Value, r.Value));
+        static VInt BinOpCalculate(Expr left, Expr right, Func<int, int, int> f, Environment env) {
+            var l = (VInt) left.Calculate(env);
+            var r = (VInt) right.Calculate(env);
+            return new VInt(f(l.Value, r.Value));
         }
 
-        static CBool BinCompOpCalculate(Expr left, Expr right, Func<int, int, bool> f, Environment env) {
-            var l = (CInt) left.Calculate(env);
-            var r = (CInt) right.Calculate(env);
-            return new CBool(f(l.Value, r.Value));
+        static VBool BinCompOpCalculate(Expr left, Expr right, Func<int, int, bool> f, Environment env) {
+            var l = (VInt) left.Calculate(env);
+            var r = (VInt) right.Calculate(env);
+            return new VBool(f(l.Value, r.Value));
         }
-        static CBool BinBoolOpCalculate(Expr left, Expr right, Func<bool, bool, bool> f, Environment env) {
-            var l = (CBool) left.Calculate(env);
-            var r = (CBool) right.Calculate(env);
-            return new CBool(f(l.Value, r.Value));
+        static VBool BinBoolOpCalculate(Expr left, Expr right, Func<bool, bool, bool> f, Environment env) {
+            var l = (VBool) left.Calculate(env);
+            var r = (VBool) right.Calculate(env);
+            return new VBool(f(l.Value, r.Value));
         }
 
     }
 
     public static class EnvironmentExtension {
         // NOTE: it may be better to use some persistent data structures instead of Dictionary
-        public static Environment AddAndCopy(this Environment env, string variable, Expr value) {
+        public static Environment AddAndCopy(this Environment env, string variable, Value value) {
             var newEnv = new Environment(env);
             newEnv[variable] = value;
             return newEnv;
