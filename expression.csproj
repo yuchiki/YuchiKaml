@@ -11,5 +11,6 @@
     <Content Include="Value.cs" />
     <Content Include="Environment.cs" />
     <Content Include="Semantics.cs" />
+    <Content Include="Test.cs" />
   </ItemGroup>
 </Project>
