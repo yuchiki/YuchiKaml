@@ -18,8 +18,7 @@ namespace expression {
                 "sum", "n", sumBody,
                 new App(
                     new Var("sum"),
-                    new CInt(10)
-                ));
+                    new CInt(10)));
 
             ShowExp(e2);
         }
@@ -33,7 +32,10 @@ namespace expression {
             | b | e && e | e || e | !e
             | e == e | e != e | e <= e | e < e | e >= e | e > e
             | if e then e else e
-            | let rec f x = e in e  // it is allowed only in function form to exist unevaluated expression as a part of the value.
+            | let rec f x = e in e
+
+        // I ristrict mu in the function form , that is, of in the form let rec f x = e in e.
+        // Because Only in closure are unevaluated values allowed to be.
      */
 
     public abstract class Value {}
