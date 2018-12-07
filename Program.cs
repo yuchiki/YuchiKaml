@@ -31,7 +31,7 @@
             } else {
                 Console.WriteLine("NG");
                 Console.WriteLine($"Expression:{e}, Expected:{expected}, Result:{result}");
-                throw new ArgumentException();
+                System.Environment.Exit(1);
             }
         }
 
