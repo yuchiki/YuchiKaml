@@ -59,7 +59,7 @@
                     new App(
                         new Var("sum"),
                         new CInt(10)))
-                .Test("letrec: recursive sum", new VInt(55));
+                .Test("letRec (recSum)", new VInt(55));
         }
         static void ShowExp(Expr e) => Console.WriteLine($" {e} ==> {e.Calculate()}");
     }

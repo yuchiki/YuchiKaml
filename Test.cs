@@ -5,7 +5,7 @@ namespace expression {
 
     static class Test {
         public static void TestEval(string name, Expr e, Value expected) {
-            Console.Write($"Test \"{name}\": ");
+            Console.Write($"Test {name,-20}: ");
             var result = e.Calculate();
             if (expected.Equals(result)) {
                 Console.WriteLine("OK");
