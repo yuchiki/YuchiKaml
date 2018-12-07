@@ -3,35 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace expression {
-    using Environment = Dictionary<string, Value>;
     class Program {
         static void Main(string[] args) {
-            var e1 =
-                new Bind(
-                    "twice",
-                    new Abs(
-                        "x",
-                        new Mul(
-                            new Var("x"),
-                            new CInt(2))),
-                    new Add(
-                        new CInt(2),
-                        new Add(
-                            new CInt(2),
-                            new App(
-                                new Var("twice"),
-                                new CInt(30)))));
-            ShowExp(e1);
-
-            var sumBody = new Abs(
-                "n",
+            var sumBody =
                 new If(
                     new Eq(new Var("n"), new CInt(0)),
                     new CInt(0),
-                    new App(
-                        new Var("sum"),
-                        new Sub(new Var("n"), new CInt(1)))));
+                    new Add(
+                        new Var("n"),
+                        new App(
+                            new Var("sum"),
+                            new Sub(new Var("n"), new CInt(1)))));
+            var e2 = new LetRec(
+                "sum", "n", sumBody,
+                new App(
+                    new Var("sum"),
+                    new CInt(10)
+                ));
 
+            ShowExp(e2);
         }
 
         static void ShowExp(Expr e) => Console.WriteLine($"{e} ==> {e.Calculate()}");
@@ -40,9 +30,10 @@ namespace expression {
 
     /*
         expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e | \x -> e | e e
-            | b | e && e | e || e | !e //TODO
+            | b | e && e | e || e | !e
             | e == e | e != e | e <= e | e < e | e >= e | e > e
-            | if e then e else e  //TODO
+            | if e then e else e
+            | let rec f x = e in e  // it is allowed only in function form to exist unevaluated expression as a part of the value.
      */
 
     public abstract class Value {}
@@ -62,8 +53,16 @@ namespace expression {
         public Environment Env { get; }
         public string Variable { get; }
         public Expr Body { get; }
-
         public Closure(Environment env, string variable, Expr body) => (Env, Variable, Body) = (env, variable, body);
+
+        public override string ToString() => $"\\{Variable} -> {Body}";
+    }
+
+    public class RecClosure : Value {
+        public Environment Env { get; }
+        public string Variable { get; }
+        public Expr Body { get; }
+        public RecClosure(Environment env, string variable, Expr body) => (Env, Variable, Body) = (env, variable, body);
     }
 
     public abstract class Expr {}
@@ -119,6 +118,16 @@ namespace expression {
         public override string ToString() => $"let {Variable} = {VarBody} in {ExprBody}";
     }
 
+    class LetRec : Expr {
+        public string Function { get; }
+        public string Argument { get; }
+        public Expr VarBody { get; }
+        public Expr ExprBody { get; }
+        public LetRec(string function, string argument, Expr varBody, Expr exprBody) => (Function, Argument, VarBody, ExprBody) = (function, argument, varBody, exprBody);
+
+        public override string ToString() => $"let {Function} {Argument} = {VarBody} in {ExprBody}";
+    }
+
     class Abs : Expr {
         public string Variable { get; }
         public Expr Body { get; }
@@ -149,7 +158,16 @@ namespace expression {
     }
 
     public static class ExprExtensions {
-        public static Value Calculate(this Expr e, Environment env) {
+        static Value Calculate(this Expr e, Environment env) {
+            // Console.WriteLine($"env:{env}");
+            // Console.WriteLine($"{e}");
+            var v = Calculate_(e, env);
+            // Console.WriteLine($"{e} ==> {v}");
+            return v;
+        }
+
+        public static Value Calculate_(this Expr e, Environment env) {
+
             // NOTE: I want to use switch expression if C# 8.0 get released.
             switch (e) {
                 case CInt ci:
@@ -183,10 +201,19 @@ namespace expression {
                 case Leq op:
                     return BinCompOpCalculate(op.Left, op.Right, (x, y) => x <= y, env);
                 case Bind b:
-                    var newEnv = env.AddAndCopy(b.Variable, b.VarBody.Calculate(env));
-                    return b.ExprBody.Calculate(newEnv);
+                    {
+                        var newEnv = env.AddAndCopy(b.Variable, b.VarBody.Calculate(env));
+                        return b.ExprBody.Calculate(newEnv);
+                    }
                 case Abs abs:
                     return new Closure(env, abs.Variable, abs.Body);
+                case LetRec letRec:
+                    {
+                        var Closure = new Closure(env, letRec.Argument, letRec.VarBody);
+                        Closure.Env[letRec.Function] = Closure;
+                        var newEnv = env.AddAndCopy(letRec.Function, Closure);
+                        return letRec.ExprBody.Calculate(newEnv);
+                    }
                 case Not n:
                     {
                         var b = (VBool) n.Body.Calculate(env);
@@ -239,6 +266,19 @@ namespace expression {
             var newEnv = new Environment(env);
             newEnv[variable] = value;
             return newEnv;
+        }
+    }
+
+    public class Environment : Dictionary<string, Value> {
+        public Environment() : base() {}
+        public Environment(Environment env) : base(env) {}
+        public override string ToString() {
+            var s = "{ ";
+            foreach (var key in Keys) {
+                s += $"{key}: {this[key]}, ";
+            }
+            s += "}";
+            return s;
         }
     }
 }
