@@ -9,11 +9,21 @@ namespace expression {
         public int Value { get; }
         public VInt(int value) => Value = value;
         public override string ToString() => $"{Value}";
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Value == ((VInt) obj).Value;
+        }
+        public override int GetHashCode() => Value;
     }
     public class VBool : Value {
         public bool Value { get; }
         public VBool(bool value) => Value = value;
         public override string ToString() => $"{Value}";
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Value == ((VBool) obj).Value;
+        }
+        public override int GetHashCode() => Value.GetHashCode();
     }
 
     public class Closure : Value {
@@ -25,10 +35,4 @@ namespace expression {
         public override string ToString() => $"\\{Variable} -> {Body}";
     }
 
-    public class RecClosure : Value {
-        public Environment Env { get; }
-        public string Variable { get; }
-        public Expr Body { get; }
-        public RecClosure(Environment env, string variable, Expr body) => (Env, Variable, Body) = (env, variable, body);
-    }
 }
