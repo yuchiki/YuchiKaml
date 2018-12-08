@@ -15,5 +15,16 @@ namespace expression {
                 System.Environment.Exit(1);
             }
         }
+
+        public static void ShouldBeEqual<T>(this T t, Object expected, string name) {
+            Console.Write($"Test {name, -20}: ");
+            if (expected.Equals(t)) {
+                Console.WriteLine("OK");
+            } else {
+                Console.WriteLine("NG");
+                Console.WriteLine($"Expected:{expected}, Result:{t}");
+                System.Environment.Exit(1);
+            }
+        }
     }
 }

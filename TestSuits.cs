@@ -2,10 +2,27 @@ namespace expression {
     using System.Collections.Generic;
     using System.Linq;
     using System;
+    using Sprache;
 
     static class TestSuits {
 
         public static void Test() {
+            Console.WriteLine("EVALUATION TEST");
+            EvaluationTest();
+
+            Console.WriteLine("PARSING TEST");
+            ParsingTest();
+
+        }
+
+        public static void ParsingTest() {
+            ExprParser.ParseInt.Parse("12").Value.ShouldBeEqual(12, "int");
+            ExprParser.ParseBool.Parse("true").Value.ShouldBeEqual(true, "true");
+            ExprParser.ParseBool.Parse("false").Value.ShouldBeEqual(false, "false");
+
+        }
+
+        public static void EvaluationTest() {
             new CInt(2).Test("cInt", new VInt(2));
             new CBool(true).Test("cBool true", new VBool(true));
             new CBool(false).Test("cBool false", new VBool(false));

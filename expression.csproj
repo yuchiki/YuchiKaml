@@ -13,6 +13,9 @@
     <Content Include="Semantics.cs" />
     <Content Include="Test.cs" />
     <Content Include="TestSuits.cs" />
-    <Content Include="Parser.cs" />
+    <Content Include="ExprParser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Sprache" Version="2.2.0" />
   </ItemGroup>
 </Project>
