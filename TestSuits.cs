@@ -9,17 +9,18 @@ namespace expression {
         public static void Test() {
             Console.WriteLine("EVALUATION TEST");
             EvaluationTest();
-
+            Console.WriteLine("");
             Console.WriteLine("PARSING TEST");
             ParsingTest();
 
         }
 
         public static void ParsingTest() {
-            ExprParser.ParseInt.Parse("12").Value.ShouldBeEqual(12, "int");
-            ExprParser.ParseBool.Parse("true").Value.ShouldBeEqual(true, "true");
-            ExprParser.ParseBool.Parse("false").Value.ShouldBeEqual(false, "false");
+            (ExprParser.MainParser.Parse("12") as CInt).Value.ShouldBeEqual(12, "int");
+            (ExprParser.MainParser.Parse("true") as CBool).Value.ShouldBeEqual(true, "true");
+            (ExprParser.MainParser.Parse("false") as CBool).Value.ShouldBeEqual(false, "true");
 
+            ExprParser.ParseID.Parse(" foo bar").ShouldBeEqual("foo", "id"); // this ignore trailing tokens
         }
 
         public static void EvaluationTest() {

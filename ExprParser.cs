@@ -6,24 +6,36 @@ namespace expression {
 
     static class ExprParser {
 
-        public static Parser<CInt> ParseInt =
+        public static Parser<Expr> ParseInt =
             from digits in Parse.Digit.Many().Text()
-        select new CInt(int.Parse(digits));
+        select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
-        public static Parser<CBool> ParseBool =
+        public static Parser<Expr> ParseBool =
             from str in Parse.String("true").Text()
             .Or(Parse.String("false").Text())
         select new CBool(str == "true" ? true : false);
+
+        public static readonly Parser<string> ParseID =
+            Parse.Letter.AtLeastOnce().Text().Token();
+
+        public static readonly Parser<Expr> ParseVar =
+            from id in ParseID select new Var(id);
+
+        public static readonly Parser<Expr> ParseParen =
+            from _ in Parse.Char('(')
+        from e in MainParser
+        from __ in Parse.Char(')')
+        select e;
+
+        public static readonly Parser<Expr> PrimaryParser =
+            ParseInt.Or(ParseBool).Or(ParseVar).Or(ParseParen);
+
+        public static readonly Parser<Expr> MainParser = PrimaryParser;
 
     }
 }
 
 /*
-        expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e | \x -> e | e e
-            | b | e && e | e || e | !e
-            | e == e | e != e | e <= e | e < e | e >= e | e > e
-            | if e then e else e
-            | let rec f x = e in e
 
         primary ::=    <int> | <bool> | <ident> | (<expr>)
         app ::= <primary> | <app> <primary>
