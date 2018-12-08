@@ -32,8 +32,14 @@ namespace expression {
 
         public static readonly Parser<Expr> AppParser = PrimaryParser.Many().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
 
-        public static readonly Parser<Expr> MainParser = AppParser;
+        public static readonly Parser<Expr> UnaryParser =
+            from negSequence in Parse.Char('!').Token().Token().Many()
+        from app in AppParser
+        select Times(negSequence.Count(), x => new Not(x), app);
 
+        public static readonly Parser<Expr> MainParser = UnaryParser;
+
+        public static T Times<T>(int n, Func<T, T> f, T value) => n == 0 ? value : (Times(n - 1, f, f(value)));
     }
 }
 
