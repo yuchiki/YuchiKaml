@@ -21,6 +21,9 @@ namespace expression {
             (ExprParser.MainParser.Parse(" false ") as CBool).Value.ShouldBeEqual(false, "false");
             (ExprParser.MainParser.Parse(" foo") as Var).Name.ShouldBeEqual("foo", "var");
             (ExprParser.MainParser.Parse(" ( 12 ) ") as CInt).Value.ShouldBeEqual(12, "paren");
+            (((ExprParser.MainParser.Parse("x y z") as App).Left as App).Left as Var).Name.ShouldBeEqual("x", "app1");
+            (((ExprParser.MainParser.Parse("x y z") as App).Left as App).Right as Var).Name.ShouldBeEqual("y", "app2");
+            ((ExprParser.MainParser.Parse("x y z") as App).Right as Var).Name.ShouldBeEqual("z", "app3");
         }
 
         public static void EvaluationTest() {

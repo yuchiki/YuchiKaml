@@ -30,7 +30,9 @@ namespace expression {
         public static readonly Parser<Expr> PrimaryParser =
             ParseInt.Or(ParseBool).Or(ParseVar).Or(ParseParen).Token();
 
-        public static readonly Parser<Expr> MainParser = PrimaryParser;
+        public static readonly Parser<Expr> AppParser = PrimaryParser.Many().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
+
+        public static readonly Parser<Expr> MainParser = AppParser;
 
     }
 }
