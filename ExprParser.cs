@@ -7,12 +7,12 @@ namespace expression {
     static class ExprParser {
 
         public static Parser<Expr> ParseInt =
-            from digits in Parse.Digit.Many().Text()
+            from digits in Parse.Digit.Many().Text().Token()
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
         public static Parser<Expr> ParseBool =
-            from str in Parse.String("true").Text()
-            .Or(Parse.String("false").Text())
+            from str in Parse.String("true").Text().Token()
+            .Or(Parse.String("false").Text().Token())
         select new CBool(str == "true" ? true : false);
 
         public static readonly Parser<string> ParseID =
@@ -28,7 +28,7 @@ namespace expression {
         select e;
 
         public static readonly Parser<Expr> PrimaryParser =
-            ParseInt.Or(ParseBool).Or(ParseVar).Or(ParseParen);
+            ParseInt.Or(ParseBool).Or(ParseVar).Or(ParseParen).Token();
 
         public static readonly Parser<Expr> MainParser = PrimaryParser;
 
