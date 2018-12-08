@@ -18,7 +18,8 @@ namespace expression {
         public static void ParsingTest() {
             (ExprParser.MainParser.Parse("12") as CInt).Value.ShouldBeEqual(12, "int");
             (ExprParser.MainParser.Parse("true") as CBool).Value.ShouldBeEqual(true, "true");
-            (ExprParser.MainParser.Parse("false") as CBool).Value.ShouldBeEqual(false, "true");
+            (ExprParser.MainParser.Parse("false") as CBool).Value.ShouldBeEqual(false, "false");
+            (ExprParser.MainParser.Parse("foo") as Var).Name.ShouldBeEqual("foo", "var");
 
             ExprParser.ParseID.Parse(" foo bar").ShouldBeEqual("foo", "id"); // this ignore trailing tokens
         }
