@@ -6,29 +6,29 @@ namespace expression {
 
     static class ExprParser {
 
-        public static Parser<Expr> ParseInt =
+        public static Parser<Expr> IntParser =
             from digits in Parse.Digit.Many().Text().Token()
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
-        public static Parser<Expr> ParseBool =
+        public static Parser<Expr> BoolParser =
             from str in Parse.String("true").Text().Token()
             .Or(Parse.String("false").Text().Token())
         select new CBool(str == "true" ? true : false);
 
-        public static readonly Parser<string> ParseID =
+        public static readonly Parser<string> IDParser =
             Parse.Letter.AtLeastOnce().Text().Token();
 
-        public static readonly Parser<Expr> ParseVar =
-            from id in ParseID select new Var(id);
+        public static readonly Parser<Expr> VarParser =
+            from id in IDParser select new Var(id);
 
-        public static readonly Parser<Expr> ParseParen =
+        public static readonly Parser<Expr> ParenParser =
             from _ in Parse.Char('(')
         from e in MainParser
         from __ in Parse.Char(')')
         select e;
 
         public static readonly Parser<Expr> PrimaryParser =
-            ParseInt.Or(ParseBool).Or(ParseVar).Or(ParseParen).Token();
+            IntParser.Or(BoolParser).Or(VarParser).Or(ParenParser).Token();
 
         public static readonly Parser<Expr> AppParser = PrimaryParser.Many().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
 
