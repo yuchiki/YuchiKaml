@@ -29,6 +29,12 @@ namespace expression {
             (((ExprParser.MainParser.Parse(" !!x ") as Not).Body as Not).Body as Var).Name.ShouldBeEqual("x", "notnot");
             (((ExprParser.MainParser.Parse(" ! ! x ") as Not).Body as Not).Body as Var).Name.ShouldBeEqual("x", "not not");
 
+            ((ExprParser.MainParser.Parse("2*3") as Mul).Left as CInt).Value.ShouldBeEqual(2, "nummulnum");
+            ((ExprParser.MainParser.Parse("2 * 3") as Mul).Left as CInt).Value.ShouldBeEqual(2, "num mul num");
+            ((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Right as CInt).Value.ShouldBeEqual(4, "mul1");
+            (((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Left as Mul).Left as CInt).Value.ShouldBeEqual(2, "mul2");
+            (((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Left as Mul).Right as CInt).Value.ShouldBeEqual(3, "mul3");
+
         }
 
         public static void EvaluationTest() {

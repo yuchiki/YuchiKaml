@@ -33,11 +33,21 @@ namespace expression {
         public static readonly Parser<Expr> AppParser = PrimaryParser.Many().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
 
         public static readonly Parser<Expr> UnaryParser =
-            from negSequence in Parse.Char('!').Token().Token().Many()
+            from negSequence in Parse.Char('!').Token().Many()
         from app in AppParser
         select Times(negSequence.Count(), x => new Not(x), app);
 
-        public static readonly Parser<Expr> MainParser = UnaryParser;
+        public static readonly Parser<Func<Expr, Expr>> MultiplicativeRestParser =
+            (
+                from _ in Parse.Char('*').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Mul(e, u))).Or(
+                from __ in Parse.Char('/').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Div(e, u)));
+
+        public static readonly Parser<Expr> MultiplicativeParser =
+            from u in UnaryParser
+        from rest in MultiplicativeRestParser.Many()
+        select rest.Aggregate(u, (acc, f) => f(acc));
+
+        public static readonly Parser<Expr> MainParser = MultiplicativeParser;
 
         public static T Times<T>(int n, Func<T, T> f, T value) => n == 0 ? value : (Times(n - 1, f, f(value)));
     }
