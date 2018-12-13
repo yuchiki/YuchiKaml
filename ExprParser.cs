@@ -40,7 +40,7 @@ namespace expression {
         public static readonly Parser<Func<Expr, Expr>> MultiplicativeRestParser =
             (
                 from _ in Parse.Char('*').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Mul(e, u))).Or(
-                from __ in Parse.Char('/').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Div(e, u)));
+                from _ in Parse.Char('/').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Div(e, u)));
 
         public static readonly Parser<Expr> MultiplicativeParser =
             from u in UnaryParser
