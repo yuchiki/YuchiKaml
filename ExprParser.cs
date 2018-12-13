@@ -4,6 +4,8 @@ namespace expression {
     using System;
     using Sprache;
 
+    using OperatorCreator = System.Func<Expr, Expr, Expr>;
+
     static class ExprParser {
 
         public static Parser<Expr> IntParser =
@@ -37,19 +39,51 @@ namespace expression {
         from app in AppParser
         select Times(negSequence.Count(), x => new Not(x), app);
 
-        public static readonly Parser<Func<Expr, Expr>> MultiplicativeRestParser =
-            (
-                from _ in Parse.Char('*').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Mul(e, u))).Or(
-                from _ in Parse.Char('/').Token() from u in UnaryParser select new Func<Expr, Expr>(e => new Div(e, u)));
-
         public static readonly Parser<Expr> MultiplicativeParser =
-            from u in UnaryParser
-        from rest in MultiplicativeRestParser.Many()
-        select rest.Aggregate(u, (acc, f) => f(acc));
+            BinOpParser(UnaryParser, new(string, OperatorCreator) [][] {
+                new(string, OperatorCreator) [] {
+                    ("*", (l, r) => new Mul(l, r)),
+                    ("/", (l, r) => new Div(l, r))
+                },
+                new(string, OperatorCreator) [] {
+                    ("+", (l, r) => new Add(l, r)),
+                    ("-", (l, r) => new Sub(l, r))
+                },
+                new(string, OperatorCreator) [] {
+                    ("<=", (l, r) => new Leq(l, r)),
+                    ("<", (l, r) => new Lt(l, r)),
+                    (">=", (l, r) => new Geq(l, r)),
+                    (">", (l, r) => new Gt(l, r))
+                },
+                new(string, OperatorCreator) [] {
+                    ("==", (l, r) => new Eq(l, r)),
+                    ("!=", (l, r) => new Neq(l, r))
+                },
+                new(string, OperatorCreator) [] {
+                    ("&&", (l, r) => new And(l, r))
+                },
+                new(string, OperatorCreator) [] {
+                    ("||", (l, r) => new Or(l, r))
+                },
+            });
 
         public static readonly Parser<Expr> MainParser = MultiplicativeParser;
 
         public static T Times<T>(int n, Func<T, T> f, T value) => n == 0 ? value : (Times(n - 1, f, f(value)));
+        public static Parser<Expr> BinOpParser(Parser<Expr> elemParser, IEnumerable < (string, OperatorCreator) > operators) {
+            Parser<Func<Expr, Expr>> restParser =
+                operators
+                .Select(x => from _ in Parse.String(x.Item1).Token() from elem in elemParser select new Func<Expr, Expr>(l => x.Item2(l, elem)))
+                .Aggregate((x, y) => x.Or(y));
+            return
+            from elem in elemParser
+            from rest in restParser.Many()
+            select rest.Aggregate(elem, (acc, f) => f(acc));
+        }
+
+        public static Parser<Expr> BinOpParser(Parser<Expr> elemParser, IEnumerable < IEnumerable < (string, OperatorCreator) >> operators) => operators.Aggregate(elemParser, (acc, definitions) =>
+            BinOpParser(acc, definitions));
+
     }
 }
 
@@ -59,7 +93,7 @@ namespace expression {
         app ::= <primary> | <app> <primary>
         unary ::= <app> | !<app> |
         multiplicative ::= <unary> | <multiplicative> * <unary> | <multiplicative> / <unary>
-        additive ::= <unary> | <additive> + <unary> | <additive> / <unary>
+        additive ::= <unary> | <additive> + <unary> | <additive> - <unary>
         relational ::=  <additive> | <relational> <= <additive> | <relational> < <additive> | <relational> >= <additive> | <relational> > <additive> |
         equality ::= <relational> | <equality> == <relational> | <equality> != <relational>
         logical_and ::= <equality> | <logical_and> && <equality>
