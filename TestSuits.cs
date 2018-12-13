@@ -12,7 +12,17 @@ namespace expression {
             Console.WriteLine("");
             Console.WriteLine("PARSING TEST");
             ParsingTest();
+            ProgramTest();
 
+        }
+
+        public static void ProgramTest() {
+            var comp1 = " 1 + 2 *3 - 4 * 5 / 6";
+            var recSumProgram = "let rec sum n = if n <= 0 then 0 else n + sum (n - 1)";
+            var letTest = "let x = 10 in x";
+            Console.WriteLine(ExprParser.MainParser.Parse(comp1).Calculate());
+            Console.WriteLine(ExprParser.MainParser.Parse(letTest).Calculate()); //MEMO: this doesn't work
+            Console.WriteLine(ExprParser.MainParser.Parse(recSumProgram).Calculate());//MEMO: this doesn't work
         }
 
         public static void ParsingTest() {
