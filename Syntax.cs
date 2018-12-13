@@ -10,7 +10,9 @@ namespace expression {
         // Because Only in closure are unevaluated values allowed to be.
      */
 
-    public abstract class Expr {}
+    public abstract class Expr {
+        public T Cast<T>() where T : Expr => (T) this;
+    }
 
     abstract class BinOperator : Expr {
         string Symbol { get; }

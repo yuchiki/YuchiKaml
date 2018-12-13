@@ -16,24 +16,24 @@ namespace expression {
         }
 
         public static void ParsingTest() {
-            (ExprParser.MainParser.Parse(" 12 ") as CInt).Value.ShouldBeEqual(12, "int");
-            (ExprParser.MainParser.Parse(" true ") as CBool).Value.ShouldBeEqual(true, "true");
-            (ExprParser.MainParser.Parse(" false ") as CBool).Value.ShouldBeEqual(false, "false");
-            (ExprParser.MainParser.Parse(" foo") as Var).Name.ShouldBeEqual("foo", "var");
-            (ExprParser.MainParser.Parse(" ( 12 ) ") as CInt).Value.ShouldBeEqual(12, "paren");
-            (((ExprParser.MainParser.Parse(" x y z ") as App).Left as App).Left as Var).Name.ShouldBeEqual("x", "app1");
-            (((ExprParser.MainParser.Parse(" x y z ") as App).Left as App).Right as Var).Name.ShouldBeEqual("y", "app2");
-            ((ExprParser.MainParser.Parse(" x y z ") as App).Right as Var).Name.ShouldBeEqual("z", "app3");
+            ExprParser.MainParser.Parse(" 12 ").Cast<CInt>().Value.ShouldBeEqual(12, "int");
+            ExprParser.MainParser.Parse(" true ").Cast<CBool>().Value.ShouldBeEqual(true, "true");
+            ExprParser.MainParser.Parse(" false ").Cast<CBool>().Value.ShouldBeEqual(false, "false");
+            ExprParser.MainParser.Parse(" foo").Cast<Var>().Name.ShouldBeEqual("foo", "var");
+            ExprParser.MainParser.Parse(" ( 12 ) ").Cast<CInt>().Value.ShouldBeEqual(12, "paren");
+            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Left.Cast<App>().Left.Cast<Var>().Name.ShouldBeEqual("x", "app1");
+            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Left.Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("y", "app2");
+            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("z", "app3");
 
-            ((ExprParser.MainParser.Parse(" !x ") as Not).Body as Var).Name.ShouldBeEqual("x", "not");
-            (((ExprParser.MainParser.Parse(" !!x ") as Not).Body as Not).Body as Var).Name.ShouldBeEqual("x", "notnot");
-            (((ExprParser.MainParser.Parse(" ! ! x ") as Not).Body as Not).Body as Var).Name.ShouldBeEqual("x", "not not");
+            ExprParser.MainParser.Parse(" !x ").Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not");
+            ExprParser.MainParser.Parse(" !!x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "notnot");
+            ExprParser.MainParser.Parse(" ! ! x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not not");
 
-            ((ExprParser.MainParser.Parse("2*3") as Mul).Left as CInt).Value.ShouldBeEqual(2, "nummulnum");
-            ((ExprParser.MainParser.Parse("2 * 3") as Mul).Left as CInt).Value.ShouldBeEqual(2, "num mul num");
-            ((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Right as CInt).Value.ShouldBeEqual(4, "mul1");
-            (((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Left as Mul).Left as CInt).Value.ShouldBeEqual(2, "mul2");
-            (((ExprParser.MainParser.Parse("2 * 3 / 4") as Div).Left as Mul).Right as CInt).Value.ShouldBeEqual(3, "mul3");
+            ExprParser.MainParser.Parse("2*3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "nummulnum");
+            ExprParser.MainParser.Parse("2 * 3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "num mul num");
+            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Right.Cast<CInt>().Value.ShouldBeEqual(4, "mul1");
+            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "mul2");
+            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Right.Cast<CInt>().Value.ShouldBeEqual(3, "mul3");
 
         }
 
