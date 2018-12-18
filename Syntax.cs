@@ -1,6 +1,6 @@
 namespace expression {
     /*
-        expression e ::= n | x | e + e | e * e | e - e | e / e | let x = e in e | \x -> e | e e
+        expression e ::= n | x | e + e | e * e | e - e | e / e | let x1 ... xn = e in e | \x -> e | e e
             | b | e && e | e || e | !e
             | e == e | e != e | e <= e | e < e | e >= e | e > e
             | if e then e else e

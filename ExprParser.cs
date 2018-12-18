@@ -16,8 +16,8 @@ namespace expression {
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
         public static Parser<Expr> BoolParser =
-            from str in Parse.String("true").Text().Token()
-            .Or(Parse.String("false").Text().Token())
+            from str in "true".ToToken()
+            .Or("false".ToToken())
         select new CBool(str == "true" ? true : false);
 
         //FIXME: this way to rule out tokens doesn't appear work well.
@@ -73,34 +73,40 @@ namespace expression {
                 },
             });
 
+        public static readonly Parser<Expr> LetParser =
+            from _ in "let".ToToken()
+        from x in IDParser
+        from ___ in "=".ToToken()
+        from e1 in MainParser
+        from ____ in "in".ToToken()
+        from e2 in MainParser
+        select new Bind(x, e1, e2);
+
+        public static readonly Parser<Expr> LetRecParser =
+            from _ in "let".ToToken()
+        from __ in "rec".ToToken()
+        from f in IDParser
+        from x in IDParser
+        from ___ in "=".ToToken()
+        from e1 in MainParser
+        from ____ in "in".ToToken()
+        from e2 in MainParser
+        select new LetRec(f, x, e1, e2);
+
         public static readonly Parser<Expr> TopExprParser =
             OrParser(new Parser<Expr>[] {
-                from _ in Parse.String("if").Token()
+                from _ in "if".ToToken()
                 from e1 in MainParser
-                from __ in Parse.String("then").Token()
+                from __ in "then".ToToken()
                 from e2 in MainParser
-                from ___ in Parse.String("else").Token()
+                from ___ in "else".ToToken()
                 from e3 in MainParser
                 select new If(e1, e2, e3),
-                    from _ in Parse.String("let").Token()
-                from __ in Parse.String("rec").Token()
-                from f in IDParser
+                    LetRecParser,
+                    LetParser,
+                    from _ in "\\".ToToken()
                 from x in IDParser
-                from ___ in Parse.String("=").Token()
-                from e1 in MainParser
-                from ____ in Parse.String("in").Token()
-                from e2 in MainParser
-                select new LetRec(f, x, e1, e2),
-                    from _ in Parse.String("let").Token()
-                from x in IDParser
-                from ___ in Parse.String("=").Token()
-                from e1 in MainParser
-                from ____ in Parse.String("in").Token()
-                from e2 in MainParser
-                select new Bind(x, e1, e2),
-                    from _ in Parse.String("\\").Token()
-                from x in IDParser
-                from __ in Parse.String("->").Token()
+                from __ in "->".ToToken()
                 from e in MainParser
                 select new Abs(x, e),
                     LogicalOrParser
@@ -128,6 +134,7 @@ namespace expression {
         public static Parser<Expr> OrParser(IEnumerable<Parser<Expr>> parsers) => parsers.Aggregate((a, b) => a.Or(b));
 
         public static Parser<T> ExceptTokens<T>(this Parser<T> parser, IEnumerable<string> tokens) => tokens.Aggregate(parser, (acc, token) => acc.Except(Parse.String(token).Token()));
+        static Parser<String> ToToken(this string tokenExpression) => Parse.String(tokenExpression).Token().Text();
 
     }
 }
