@@ -39,9 +39,9 @@ namespace expression {
                 case Or op:
                     return BinBoolOpCalculate(op.Left, op.Right, (x, y) => x | y, env);
                 case Eq op:
-                    return BinCompOpCalculate(op.Left, op.Right, (x, y) => x == y, env);
+                    return BinEqCalculate(op.Left, op.Right, env);
                 case Neq op:
-                    return BinCompOpCalculate(op.Left, op.Right, (x, y) => x != y, env);
+                    return BinNeqCalculate(op.Left, op.Right, env);
                 case Gt op:
                     return BinCompOpCalculate(op.Left, op.Right, (x, y) => x > y, env);
                 case Lt op:
@@ -102,6 +102,19 @@ namespace expression {
             var r = right.EvalTo<VInt>(env);
             return new VBool(f(l.Value, r.Value));
         }
+
+        static VBool BinEqCalculate(Expr left, Expr right, Environment env) {
+            var l = left.Calculate(env);
+            var r = right.Calculate(env);
+            return new VBool(l.Equals(r));
+        }
+
+        static VBool BinNeqCalculate(Expr left, Expr right, Environment env) {
+            var l = left.Calculate(env);
+            var r = right.Calculate(env);
+            return new VBool(!l.Equals(r));
+        }
+
         static VBool BinBoolOpCalculate(Expr left, Expr right, Func<bool, bool, bool> f, Environment env) {
             var l = left.EvalTo<VBool>(env);
             var r = right.EvalTo<VBool>(env);
