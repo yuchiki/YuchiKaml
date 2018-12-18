@@ -9,7 +9,7 @@ namespace expression {
     static class ExprParser {
 
         public static Parser<Expr> IntParser =
-            from digits in Parse.Digit.Many().Text().Token()
+            from digits in Parse.Digit.AtLeastOnce().Text().Token()
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
         public static Parser<Expr> BoolParser =
@@ -42,7 +42,8 @@ namespace expression {
         public static readonly Parser<Expr> PrimaryParser =
             IntParser.Or(BoolParser).Or(VarParser).Or(ParenParser).Token();
 
-        public static readonly Parser<Expr> AppParser = PrimaryParser.Many().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
+        public static readonly Parser<Expr> AppParser =
+            PrimaryParser.AtLeastOnce().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
 
         public static readonly Parser<Expr> UnaryParser =
             from negSequence in Parse.Char('!').Token().Many()
@@ -96,7 +97,6 @@ namespace expression {
                 from e2 in MainParser
                 select new LetRec(f, x, e1, e2),
                     from _ in Parse.String("let").Token()
-                from __ in Parse.String("rec").Token()
                 from x in IDParser
                 from ___ in Parse.String("=").Token()
                 from e1 in MainParser
