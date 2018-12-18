@@ -22,10 +22,17 @@ namespace expression {
             var comp1 = " 1 + 2 *3 - 4 * 5 / 6";
             var letTest = "let x = 2 in let y = 3 in x + y";
             var recSumProgram = "let rec sum n = if n <= 0 then 0 else n + sum (n - 1) in sum 10";
+            var gcdProgram = @"
+                let rec gcd m n =
+                    if m > n then gcd (m-n) n
+                    else if m < n then gcd m (n-m)
+                    else m
+                    in gcd 120 45";
 
             ExprParser.MainParser.Parse(comp1).Calculate().ShouldBeEqual(new VInt(4), "numeral expression");
             ExprParser.MainParser.Parse(letTest).Calculate().ShouldBeEqual(new VInt(5), "let");
             ExprParser.MainParser.Parse(recSumProgram).Calculate().ShouldBeEqual(new VInt(55), "let rec and recursion");
+            ExprParser.MainParser.Parse(gcdProgram).Calculate().ShouldBeEqual(new VInt(15), "multi let rec: gcd");
         }
 
         public static void ParsingTest() {

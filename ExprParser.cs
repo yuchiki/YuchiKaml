@@ -75,7 +75,6 @@ namespace expression {
         from e3 in MainParser
         select new If(e1, e2, e3);
 
-        // TODO: make it parser multiple variables
         public static readonly Parser<Expr> LetParser =
             from _ in "let".ToToken()
         from x in IDParser
@@ -86,16 +85,18 @@ namespace expression {
         from e2 in MainParser
         select new Bind(x, variables.Reverse().Aggregate(e1, Flip<string, Expr, Expr>(Expr.Abs)), e2);
 
+        // TODO: make it parse multiple variables
         public static readonly Parser<Expr> LetRecParser =
             from _ in "let".ToToken()
         from __ in "rec".ToToken()
         from f in IDParser
         from x in IDParser
+        from variables in IDParser.Many()
         from ___ in "=".ToToken()
         from e1 in MainParser
         from ____ in "in".ToToken()
         from e2 in MainParser
-        select new LetRec(f, x, e1, e2);
+        select new LetRec(f, x, variables.Reverse().Aggregate(e1, Flip<string, Expr, Expr>(Expr.Abs)), e2);
 
         public static readonly Parser<Expr> AbsParser =
             from _ in "\\".ToToken()
