@@ -7,6 +7,9 @@ namespace expression {
     using OperatorCreator = System.Func<Expr, Expr, Expr>;
 
     static class ExprParser {
+        public static Parser<Expr> UnitParser =
+            from _ in Parse.String("()")
+        select new Unit();
 
         public static Parser<Expr> IntParser =
             from digits in Parse.Digit.AtLeastOnce().Text().Token()
@@ -32,7 +35,7 @@ namespace expression {
         select e;
 
         public static readonly Parser<Expr> PrimaryParser =
-            IntParser.Or(BoolParser).Or(VarParser).Or(ParenParser).Token();
+            IntParser.Or(UnitParser).Or(BoolParser).Or(VarParser).Or(ParenParser).Token();
 
         public static readonly Parser<Expr> AppParser =
             PrimaryParser.AtLeastOnce().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
@@ -131,7 +134,7 @@ namespace expression {
 
 /*
 
-        primary ::=    <int> | <bool> | <ident> | (<expr>)
+        primary ::=  <unit> | <int> | <bool> | <ident> | (<expr>)
         app ::= <primary> | <app> <primary>
         unary ::= <app> | !<app> |
         multiplicative ::= <unary> | <multiplicative> * <unary> | <multiplicative> / <unary>

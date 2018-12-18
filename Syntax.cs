@@ -22,6 +22,16 @@ namespace expression {
         public override string ToString() => $"({Left}) {Symbol} ({Right})";
     }
 
+    class Unit : Expr {
+        public override string ToString() => "()";
+
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return true;
+        }
+        public override int GetHashCode() => 0;
+    }
+
     class CInt : Expr {
         public int Value { get; }
         public CInt(int value) => Value = value;

@@ -16,6 +16,8 @@ namespace expression {
 
             // NOTE: I want to use switch expression if C# 8.0 get released.
             switch (e) {
+                case Unit u:
+                    return new VUnit();
                 case CInt ci:
                     return new VInt(ci.Value);
                 case CBool cb:

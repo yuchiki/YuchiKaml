@@ -5,6 +5,15 @@ namespace expression {
 
     public abstract class Value {}
 
+    public class VUnit : Value {
+        public override string ToString() => "()";
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return true;
+        }
+        public override int GetHashCode() => 0;
+    }
+
     public class VInt : Value {
         public int Value { get; }
         public VInt(int value) => Value = value;

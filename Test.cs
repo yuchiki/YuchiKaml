@@ -11,7 +11,7 @@ namespace expression {
                 Console.WriteLine("OK");
             } else {
                 Console.WriteLine("NG");
-                Console.WriteLine($"Expression:{e}, Expected:{expected}, Result:{result}");
+                Console.WriteLine($"Expression:{e}, Expected:{expected} of {expected.GetType()}, Result:{result} of {result.GetType()}");
                 System.Environment.Exit(1);
             }
         }
@@ -22,7 +22,7 @@ namespace expression {
                 Console.WriteLine("OK");
             } else {
                 Console.WriteLine("NG");
-                Console.WriteLine($"Expected:{expected}, Result:{t}");
+                Console.WriteLine($"Expected:{expected} of {expected.GetType()}, Result:{t} of {t.GetType()}");
                 System.Environment.Exit(1);
             }
         }

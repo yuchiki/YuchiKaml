@@ -29,6 +29,7 @@ namespace expression {
         }
 
         public static void ParsingTest() {
+            ExprParser.MainParser.Parse(" () ").ShouldBeEqual(new Unit(), "unit");
             ExprParser.MainParser.Parse(" 12 ").Cast<CInt>().Value.ShouldBeEqual(12, "int");
             ExprParser.MainParser.Parse(" true ").Cast<CBool>().Value.ShouldBeEqual(true, "true");
             ExprParser.MainParser.Parse(" false ").Cast<CBool>().Value.ShouldBeEqual(false, "false");
@@ -51,6 +52,7 @@ namespace expression {
         }
 
         public static void EvaluationTest() {
+            new Unit().Test("unit", new VUnit());
             new CInt(2).Test("cInt", new VInt(2));
             new CBool(true).Test("cBool true", new VBool(true));
             new CBool(false).Test("cBool false", new VBool(false));
