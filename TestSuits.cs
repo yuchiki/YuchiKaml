@@ -20,11 +20,11 @@ namespace expression {
 
         public static void ProgramTest() {
             var comp1 = " 1 + 2 *3 - 4 * 5 / 6";
-            var recSumProgram = "let rec sum n = if n <= 0 then 0 else n + sum (n - 1)";
+            var recSumProgram = "let rec sum n = if n <= 0 then 0 else n + sum (n - 1) in sum 10";
             var letTest = "let x = 2 in let y = 3 in x + y";
-            Console.WriteLine(ExprParser.MainParser.Parse(comp1));
-            Console.WriteLine(ExprParser.MainParser.Parse(letTest)); //MEMO: this doesn't work
-            Console.WriteLine(ExprParser.MainParser.Parse(recSumProgram)); //MEMO: this doesn't work
+            Console.WriteLine(ExprParser.MainParser.Parse(comp1).Calculate());
+            Console.WriteLine(ExprParser.MainParser.Parse(letTest).Calculate()); //MEMO: this doesn't work
+            Console.WriteLine(ExprParser.MainParser.Parse(recSumProgram).Calculate()); //MEMO: this doesn't work
         }
 
         public static void ParsingTest() {

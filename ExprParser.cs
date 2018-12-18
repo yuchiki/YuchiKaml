@@ -20,15 +20,7 @@ namespace expression {
         //FIXME: this way to rule out tokens doesn't appear work well.
         // This send empty token into AppParser, and AppParser throws exception.
         public static readonly Parser<string> IDParser =
-            Parse.Letter.AtLeastOnce().Text()
-            .Except(Parse.String("true").Token())
-            .Except(Parse.String("false").Token())
-            .Except(Parse.String("let").Token())
-            .Except(Parse.String("rec").Token())
-            .Except(Parse.String("in").Token())
-            .Except(Parse.String("if").Token())
-            .Except(Parse.String("then").Token())
-            .Except(Parse.String("else").Token());
+            Parse.Letter.AtLeastOnce().Text().ExceptTokens(new [] { "true", "false", "let", "rec", "in", "if", "then", "else" }).Token();
 
         public static readonly Parser<Expr> VarParser =
             from id in IDParser select new Var(id);
@@ -113,7 +105,7 @@ namespace expression {
 
         public static readonly Parser<Expr> MainParser = TopExprParser;
 
-        public static readonly string[] Keywords = { "let", "rec", "in", "if", "then", "else" };
+        public static readonly string[] Keywords = { "true", "false", "let", "rec", "in", "if", "then", "else" };
 
         public static T Times<T>(int n, Func<T, T> f, T value) => n == 0 ? value : (Times(n - 1, f, f(value)));
         public static Parser<Expr> BinOpParser(Parser<Expr> elemParser, IEnumerable < (string, OperatorCreator) > operators) {
@@ -131,6 +123,8 @@ namespace expression {
             BinOpParser(acc, definitions));
 
         public static Parser<Expr> OrParser(IEnumerable<Parser<Expr>> parsers) => parsers.Aggregate((a, b) => a.Or(b));
+
+        public static Parser<T> ExceptTokens<T>(this Parser<T> parser, IEnumerable<string> tokens) => tokens.Aggregate(parser, (acc, token) => acc.Except(Parse.String(token).Token()));
 
     }
 }
