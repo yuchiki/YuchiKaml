@@ -21,8 +21,6 @@ namespace expression {
             from str in OrParser("true".ToToken(), "false".ToToken())
         select new CBool(str == "true");
 
-        //FIXME: this way to rule out tokens doesn't appear work well.
-        // This send empty token into AppParser, and AppParser throws exception.
         public static readonly Parser<string> IDParser =
             Parse.Letter.AtLeastOnce().Text().ExceptTokens(KeyWords).Token();
 
