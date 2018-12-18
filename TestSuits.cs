@@ -29,25 +29,33 @@ namespace expression {
         }
 
         public static void ParsingTest() {
-            ExprParser.MainParser.Parse(" () ").ShouldBeEqual(new Unit(), "unit");
-            ExprParser.MainParser.Parse(" 12 ").Cast<CInt>().Value.ShouldBeEqual(12, "int");
-            ExprParser.MainParser.Parse(" true ").Cast<CBool>().Value.ShouldBeEqual(true, "true");
-            ExprParser.MainParser.Parse(" false ").Cast<CBool>().Value.ShouldBeEqual(false, "false");
-            ExprParser.MainParser.Parse(" foo").Cast<Var>().Name.ShouldBeEqual("foo", "var");
-            ExprParser.MainParser.Parse(" ( 12 ) ").Cast<CInt>().Value.ShouldBeEqual(12, "paren");
-            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Left.Cast<App>().Left.Cast<Var>().Name.ShouldBeEqual("x", "app1");
-            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Left.Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("y", "app2");
-            ExprParser.MainParser.Parse(" x y z ").Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("z", "app3");
+            Func<string, Expr> parse = ExprParser.MainParser.Parse;
 
-            ExprParser.MainParser.Parse(" !x ").Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not");
-            ExprParser.MainParser.Parse(" !!x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "notnot");
-            ExprParser.MainParser.Parse(" ! ! x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not not");
+            parse(" () ").ShouldBeEqual(new Unit(), "unit");
+            parse(" 12 ").Cast<CInt>().Value.ShouldBeEqual(12, "int");
+            parse(" true ").Cast<CBool>().Value.ShouldBeEqual(true, "true");
+            parse(" false ").Cast<CBool>().Value.ShouldBeEqual(false, "false");
+            parse(" foo").Cast<Var>().Name.ShouldBeEqual("foo", "var");
+            parse(" ( 12 ) ").Cast<CInt>().Value.ShouldBeEqual(12, "paren");
+            parse(" x y z ").Cast<App>().Left.Cast<App>().Left.Cast<Var>().Name.ShouldBeEqual("x", "app1");
+            parse(" x y z ").Cast<App>().Left.Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("y", "app2");
+            parse(" x y z ").Cast<App>().Right.Cast<Var>().Name.ShouldBeEqual("z", "app3");
 
-            ExprParser.MainParser.Parse("2*3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "nummulnum");
-            ExprParser.MainParser.Parse("2 * 3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "num mul num");
-            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Right.Cast<CInt>().Value.ShouldBeEqual(4, "mul1");
-            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "mul2");
-            ExprParser.MainParser.Parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Right.Cast<CInt>().Value.ShouldBeEqual(3, "mul3");
+            parse(" !x ").Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not");
+            parse(" !!x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "notnot");
+            parse(" ! ! x ").Cast<Not>().Body.Cast<Not>().Body.Cast<Var>().Name.ShouldBeEqual("x", "not not");
+
+            parse("2*3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "nummulnum");
+            parse("2 * 3").Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "num mul num");
+            parse("2 * 3 / 4").Cast<Div>().Right.Cast<CInt>().Value.ShouldBeEqual(4, "mul1");
+            parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Left.Cast<CInt>().Value.ShouldBeEqual(2, "mul2");
+            parse("2 * 3 / 4").Cast<Div>().Left.Cast<Mul>().Right.Cast<CInt>().Value.ShouldBeEqual(3, "mul3");
+
+            parse("let f a b = 1 in 2").Cast<Bind>().Variable.ShouldBeEqual("f", "let1");
+            parse("let f a b = 1 in 2").Cast<Bind>().VarBody.Cast<Abs>().Variable.ShouldBeEqual("a", "let2");
+            parse("let f a b = 1 in 2").Cast<Bind>().VarBody.Cast<Abs>().Body.Cast<Abs>().Variable.ShouldBeEqual("b", "let3");
+            parse("let f a b = 1 in 2").Cast<Bind>().VarBody.Cast<Abs>().Body.Cast<Abs>().Body.Cast<CInt>().Value.ShouldBeEqual(1, "let4");
+            parse("let f a b = 1 in 2").Cast<Bind>().ExprBody.Cast<CInt>().Value.ShouldBeEqual(2, "let5");
 
         }
 

@@ -79,11 +79,12 @@ namespace expression {
         public static readonly Parser<Expr> LetParser =
             from _ in "let".ToToken()
         from x in IDParser
+        from variables in IDParser.Many()
         from ___ in "=".ToToken()
         from e1 in MainParser
         from ____ in "in".ToToken()
         from e2 in MainParser
-        select new Bind(x, e1, e2);
+        select new Bind(x, variables.Reverse().Aggregate(e1, Flip<string, Expr, Expr>(Expr.Abs)), e2);
 
         public static readonly Parser<Expr> LetRecParser =
             from _ in "let".ToToken()
@@ -131,6 +132,7 @@ namespace expression {
         public static Parser<T> ExceptTokens<T>(this Parser<T> parser, IEnumerable<string> tokens) => tokens.Aggregate(parser, (acc, token) => acc.Except(Parse.String(token).Token()));
         static Parser<String> ToToken(this string tokenExpression) => Parse.String(tokenExpression).Token().Text();
 
+        static Func<T2, T1, T3> Flip<T1, T2, T3>(this Func<T1, T2, T3> f) => (t2, t1) => f(t1, t2);
     }
 }
 
