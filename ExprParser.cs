@@ -75,6 +75,7 @@ namespace expression {
         from e3 in MainParser
         select new If(e1, e2, e3);
 
+        // TODO: make it parser multiple variables
         public static readonly Parser<Expr> LetParser =
             from _ in "let".ToToken()
         from x in IDParser
