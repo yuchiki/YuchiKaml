@@ -7,6 +7,8 @@ namespace expression {
     using OperatorCreator = System.Func<Expr, Expr, Expr>;
 
     static class ExprParser {
+        public static readonly string[] KeyWords = new [] { "true", "false", "let", "rec", "in", "if", "then", "else" };
+
         public static Parser<Expr> UnitParser =
             from _ in Parse.String("()")
         select new Unit();
@@ -16,14 +18,13 @@ namespace expression {
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
 
         public static Parser<Expr> BoolParser =
-            from str in "true".ToToken()
-            .Or("false".ToToken())
-        select new CBool(str == "true" ? true : false);
+            from str in OrParser("true".ToToken(), "false".ToToken())
+        select new CBool(str == "true");
 
         //FIXME: this way to rule out tokens doesn't appear work well.
         // This send empty token into AppParser, and AppParser throws exception.
         public static readonly Parser<string> IDParser =
-            Parse.Letter.AtLeastOnce().Text().ExceptTokens(new [] { "true", "false", "let", "rec", "in", "if", "then", "else" }).Token();
+            Parse.Letter.AtLeastOnce().Text().ExceptTokens(KeyWords).Token();
 
         public static readonly Parser<Expr> VarParser =
             from id in IDParser select new Var(id);
@@ -35,43 +36,46 @@ namespace expression {
         select e;
 
         public static readonly Parser<Expr> PrimaryParser =
-            IntParser.Or(UnitParser).Or(BoolParser).Or(VarParser).Or(ParenParser).Token();
+            OrParser(IntParser, UnitParser, BoolParser, VarParser, ParenParser).Token();
 
         public static readonly Parser<Expr> AppParser =
-            PrimaryParser.AtLeastOnce().Select(primaries => primaries.Aggregate((e1, e2) => new App(e1, e2)));
+            PrimaryParser.AtLeastOnce().Select(primaries => primaries.Aggregate(Expr.App));
 
         public static readonly Parser<Expr> UnaryParser =
             from negSequence in Parse.Char('!').Token().Many()
         from app in AppParser
-        select Times(negSequence.Count(), x => new Not(x), app);
+        select Times(negSequence.Count(), Expr.Not, app);
 
         public static readonly Parser<Expr> LogicalOrParser =
             BinOpParser(UnaryParser, new(string, OperatorCreator) [][] {
                 new(string, OperatorCreator) [] {
-                    ("*", (l, r) => new Mul(l, r)),
-                    ("/", (l, r) => new Div(l, r))
+                    ("*", Expr.Mul), ("/", Expr.Div)
                 },
                 new(string, OperatorCreator) [] {
-                    ("+", (l, r) => new Add(l, r)),
-                    ("-", (l, r) => new Sub(l, r))
+                    ("+", Expr.Add), ("-", Expr.Sub)
                 },
                 new(string, OperatorCreator) [] {
-                    ("<=", (l, r) => new Leq(l, r)),
-                    ("<", (l, r) => new Lt(l, r)),
-                    (">=", (l, r) => new Geq(l, r)),
-                    (">", (l, r) => new Gt(l, r))
+                    ("<=", Expr.Leq), ("<", Expr.Lt), (">=", Expr.Geq), (">", Expr.Gt)
                 },
                 new(string, OperatorCreator) [] {
-                    ("==", (l, r) => new Eq(l, r)),
-                    ("!=", (l, r) => new Neq(l, r))
+                    ("==", Expr.Eq), ("!=", Expr.Neq)
                 },
                 new(string, OperatorCreator) [] {
-                    ("&&", (l, r) => new And(l, r))
+                    ("&&", Expr.And)
                 },
                 new(string, OperatorCreator) [] {
-                    ("||", (l, r) => new Or(l, r))
+                    ("||", Expr.Or)
                 },
             });
+
+        public static readonly Parser<Expr> IfParser =
+            from _ in "if".ToToken()
+        from e1 in MainParser
+        from __ in "then".ToToken()
+        from e2 in MainParser
+        from ___ in "else".ToToken()
+        from e3 in MainParser
+        select new If(e1, e2, e3);
 
         public static readonly Parser<Expr> LetParser =
             from _ in "let".ToToken()
@@ -93,28 +97,19 @@ namespace expression {
         from e2 in MainParser
         select new LetRec(f, x, e1, e2);
 
+        public static readonly Parser<Expr> AbsParser =
+            from _ in "\\".ToToken()
+        from x in IDParser
+        from __ in "->".ToToken()
+        from e in MainParser
+        select new Abs(x, e);
+
         public static readonly Parser<Expr> TopExprParser =
-            OrParser(new Parser<Expr>[] {
-                from _ in "if".ToToken()
-                from e1 in MainParser
-                from __ in "then".ToToken()
-                from e2 in MainParser
-                from ___ in "else".ToToken()
-                from e3 in MainParser
-                select new If(e1, e2, e3),
-                    LetRecParser,
-                    LetParser,
-                    from _ in "\\".ToToken()
-                from x in IDParser
-                from __ in "->".ToToken()
-                from e in MainParser
-                select new Abs(x, e),
-                    LogicalOrParser
-            });
+            OrParser(IfParser, LetRecParser, LetParser, AbsParser, LogicalOrParser);
 
         public static readonly Parser<Expr> MainParser = TopExprParser;
 
-        public static readonly string[] Keywords = { "true", "false", "let", "rec", "in", "if", "then", "else" };
+        /* Followings are helper functions */
 
         public static T Times<T>(int n, Func<T, T> f, T value) => n == 0 ? value : (Times(n - 1, f, f(value)));
         public static Parser<Expr> BinOpParser(Parser<Expr> elemParser, IEnumerable < (string, OperatorCreator) > operators) {
@@ -131,7 +126,8 @@ namespace expression {
         public static Parser<Expr> BinOpParser(Parser<Expr> elemParser, IEnumerable < IEnumerable < (string, OperatorCreator) >> operators) => operators.Aggregate(elemParser, (acc, definitions) =>
             BinOpParser(acc, definitions));
 
-        public static Parser<Expr> OrParser(IEnumerable<Parser<Expr>> parsers) => parsers.Aggregate((a, b) => a.Or(b));
+        public static Parser<T> OrParser<T>(IEnumerable<Parser<T>> parsers) => parsers.Aggregate((a, b) => a.Or(b));
+        public static Parser<T> OrParser<T>(params Parser<T>[] parsers) => OrParser((IEnumerable<Parser<T>>) parsers);
 
         public static Parser<T> ExceptTokens<T>(this Parser<T> parser, IEnumerable<string> tokens) => tokens.Aggregate(parser, (acc, token) => acc.Except(Parse.String(token).Token()));
         static Parser<String> ToToken(this string tokenExpression) => Parse.String(tokenExpression).Token().Text();

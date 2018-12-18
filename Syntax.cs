@@ -12,6 +12,29 @@ namespace expression {
 
     public abstract class Expr {
         public T Cast<T>() where T : Expr => (T) this;
+
+        public static readonly Expr Unit = new Unit();
+        public static Expr CInt(int i) => new CInt(i);
+        public static Expr CBool(bool b) => new CBool(b);
+        public static Expr Var(string x) => new Var(x);
+        public static Expr Add(Expr l, Expr r) => new Add(l, r);
+        public static Expr Mul(Expr l, Expr r) => new Mul(l, r);
+        public static Expr Sub(Expr l, Expr r) => new Sub(l, r);
+        public static Expr Div(Expr l, Expr r) => new Div(l, r);
+        public static Expr And(Expr l, Expr r) => new And(l, r);
+        public static Expr Or(Expr l, Expr r) => new Or(l, r);
+        public static Expr Eq(Expr l, Expr r) => new Eq(l, r);
+        public static Expr Neq(Expr l, Expr r) => new Neq(l, r);
+        public static Expr Gt(Expr l, Expr r) => new Gt(l, r);
+        public static Expr Lt(Expr l, Expr r) => new Lt(l, r);
+        public static Expr Geq(Expr l, Expr r) => new Geq(l, r);
+        public static Expr Leq(Expr l, Expr r) => new Leq(l, r);
+        public static Expr Not(Expr e) => new Not(e);
+        public static Expr Bind(string variable, Expr varBody, Expr exprBody) => new Bind(variable, varBody, exprBody);
+        public static Expr LetRec(string function, string argument, Expr varBody, Expr exprBody) => new LetRec(function, argument, varBody, exprBody);
+        public static Expr Abs(string variable, Expr body) => new Abs(variable, body);
+        public static Expr App(Expr l, Expr r) => new App(l, r);
+        public static Expr If(Expr condition, Expr left, Expr right) => new If(condition, left, right);
     }
 
     abstract class BinOperator : Expr {
