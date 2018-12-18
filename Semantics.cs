@@ -66,18 +66,18 @@ namespace expression {
                     }
                 case Not n:
                     {
-                        var b = (VBool) n.Body.Calculate(env);
+                        var b = n.Body.EvalTo<VBool>(env);
                         return new VBool(!(b.Value));
                     }
                 case App app:
                     {
-                        var left = (Closure) app.Left.Calculate(env);
+                        var left = app.Left.EvalTo<Closure>(env);
                         var right = app.Right.Calculate(env);
                         return left.Body.Calculate(left.Env.AddAndCopy(left.Variable, right));
                     }
                 case If ifExpr:
                     {
-                        var condition = (VBool) ifExpr.Condition.Calculate(env);
+                        var condition = ifExpr.Condition.EvalTo<VBool>(env);
                         if (condition.Value) {
                             return ifExpr.Left.Calculate(env);
                         } else {
@@ -92,20 +92,26 @@ namespace expression {
         public static Value Calculate(this Expr e) => e.Calculate(new Environment());
 
         static VInt BinOpCalculate(Expr left, Expr right, Func<int, int, int> f, Environment env) {
-            var l = (VInt) left.Calculate(env);
-            var r = (VInt) right.Calculate(env);
+            var l = left.EvalTo<VInt>(env);
+            var r = right.EvalTo<VInt>(env);
             return new VInt(f(l.Value, r.Value));
         }
 
         static VBool BinCompOpCalculate(Expr left, Expr right, Func<int, int, bool> f, Environment env) {
-            var l = (VInt) left.Calculate(env);
-            var r = (VInt) right.Calculate(env);
+            var l = left.EvalTo<VInt>(env);
+            var r = right.EvalTo<VInt>(env);
             return new VBool(f(l.Value, r.Value));
         }
         static VBool BinBoolOpCalculate(Expr left, Expr right, Func<bool, bool, bool> f, Environment env) {
-            var l = (VBool) left.Calculate(env);
-            var r = (VBool) right.Calculate(env);
+            var l = left.EvalTo<VBool>(env);
+            var r = right.EvalTo<VBool>(env);
             return new VBool(f(l.Value, r.Value));
+        }
+
+        static T EvalTo<T>(this Expr e, Environment env) where T : Value {
+            var v = e.Calculate(env);
+            if (!(v is T)) throw new InvalidCastException($"expected {e} => {v} has type {typeof(T).FullName}, but result is {v.GetType()}");
+            return (T) v;
         }
     }
 }

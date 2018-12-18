@@ -10,19 +10,10 @@ let rec map f l =
         let car = fst l in
         let cdr = snd l in
         makeTuple (f car) (map f cdr) in
-
-
-let rec fold init f l =
-    if isNil l then init
-    else
-        let car = fst l in
-        let cdr = snd l in
-        fold (f init car) f cdr in
-
 let rec range minValue maxValue =
     if minValue > maxValue then Nil
     else makeTuple minValue (range (minValue + 1) maxValue) in
 
-let list =  (range 1 10) in
+let list =  (range 5 10) in
 let list = map (\x -> x * x) list in
-fold 0 (x-> y->x+y) list
+fst list
