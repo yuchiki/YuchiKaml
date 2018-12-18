@@ -35,6 +35,17 @@ namespace expression {
         public override int GetHashCode() => Value.GetHashCode();
     }
 
+    public class VString : Value {
+        public string Value { get; }
+        public VString(string value) => Value = value;
+        public override string ToString() => $"{Value}";
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Value == ((VString) obj).Value;
+        }
+        public override int GetHashCode() => Value.GetHashCode();
+    }
+
     public class Closure : Value {
         public Environment Env { get; }
         public string Variable { get; }

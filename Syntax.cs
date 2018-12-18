@@ -1,6 +1,6 @@
 namespace expression {
     /*
-        expression e ::= n | x | e + e | e * e | e - e | e / e | let x1 ... xn = e in e | \x -> e | e e
+        expression e ::= n | s | x | e + e | e * e | e - e | e / e | let x1 ... xn = e in e | \x -> e | e e
             | b | e && e | e || e | !e
             | e == e | e != e | e <= e | e < e | e >= e | e > e
             | if e then e else e
@@ -55,16 +55,39 @@ namespace expression {
         public override int GetHashCode() => 0;
     }
 
+    class CString : Expr {
+        public string Value { get; }
+        public CString(string value) => Value = value;
+        public override string ToString() => $"{Value}";
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Value == ((CString) obj).Value;
+        }
+        public override int GetHashCode() => Value.GetHashCode();
+    }
+
     class CInt : Expr {
         public int Value { get; }
         public CInt(int value) => Value = value;
         public override string ToString() => $"{Value}";
+
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Value == ((CInt) obj).Value;
+        }
+        public override int GetHashCode() => Value.GetHashCode();
     }
 
     class Var : Expr {
         public string Name { get; }
         public Var(string name) => Name = name;
         public override string ToString() => Name;
+
+        public override bool Equals(object obj) {
+            if (obj == null || this.GetType() != obj.GetType()) return false;
+            return this.Name == ((Var) obj).Name;
+        }
+        public override int GetHashCode() => Name.GetHashCode();
     }
 
     class Add : BinOperator { public Add(Expr left, Expr right) : base("+", left, right) {} }

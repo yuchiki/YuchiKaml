@@ -1,0 +1,5 @@
+let makeTuple a b condition = if condition then a else b in
+let fst t = t true in
+let snd t = t false in
+let rec repeat n a = if n == 0 then false else makeTuple true (makeTuple a (repeat (n-1) a)) in
+fst (repeat 10 5)

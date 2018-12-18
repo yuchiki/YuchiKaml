@@ -18,6 +18,8 @@ namespace expression {
             switch (e) {
                 case Unit u:
                     return new VUnit();
+                case CString cs:
+                    return new VString(cs.Value);
                 case CInt ci:
                     return new VInt(ci.Value);
                 case CBool cb:

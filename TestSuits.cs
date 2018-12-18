@@ -39,6 +39,7 @@ namespace expression {
             Func<string, Expr> parse = ExprParser.MainParser.Parse;
 
             parse(" () ").ShouldBeEqual(new Unit(), "unit");
+            parse(" \" str1_ ng \" ").Cast<CString>().Value.ShouldBeEqual(" str1_ ng ", "string");
             parse(" 12 ").Cast<CInt>().Value.ShouldBeEqual(12, "int");
             parse(" true ").Cast<CBool>().Value.ShouldBeEqual(true, "true");
             parse(" false ").Cast<CBool>().Value.ShouldBeEqual(false, "false");

@@ -13,6 +13,12 @@ namespace expression {
             from _ in Parse.String("()")
         select new Unit();
 
+        public static Parser<Expr> StringParser =
+            from _ in Parse.Char('"')
+        from s in Parse.CharExcept(new char[] { '"', }).Many().Text()
+        from __ in Parse.Char('"')
+        select new CString(s);
+
         public static Parser<Expr> IntParser =
             from digits in Parse.Digit.AtLeastOnce().Text().Token()
         select new CInt(int.TryParse(digits, out var n) ? n : -1);
@@ -34,7 +40,7 @@ namespace expression {
         select e;
 
         public static readonly Parser<Expr> PrimaryParser =
-            OrParser(IntParser, UnitParser, BoolParser, VarParser, ParenParser).Token();
+            OrParser(StringParser, IntParser, UnitParser, BoolParser, VarParser, ParenParser).Token();
 
         public static readonly Parser<Expr> AppParser =
             PrimaryParser.AtLeastOnce().Select(primaries => primaries.Aggregate(Expr.App));
