@@ -37,6 +37,8 @@ namespace expression {
         public static Expr If(Expr condition, Expr left, Expr right) => new If(condition, left, right);
     }
 
+    abstract class Literal : Expr {}
+
     abstract class BinOperator : Expr {
         string Symbol { get; }
         public Expr Left { get; }
@@ -45,7 +47,7 @@ namespace expression {
         public override string ToString() => $"({Left}) {Symbol} ({Right})";
     }
 
-    class Unit : Expr {
+    class Unit : Literal {
         public override string ToString() => "()";
 
         public override bool Equals(object obj) {
@@ -55,7 +57,7 @@ namespace expression {
         public override int GetHashCode() => 0;
     }
 
-    class CString : Expr {
+    class CString : Literal {
         public string Value { get; }
         public CString(string value) => Value = value;
         public override string ToString() => $"{Value}";
@@ -66,7 +68,7 @@ namespace expression {
         public override int GetHashCode() => Value.GetHashCode();
     }
 
-    class CInt : Expr {
+    class CInt : Literal {
         public int Value { get; }
         public CInt(int value) => Value = value;
         public override string ToString() => $"{Value}";
@@ -76,6 +78,12 @@ namespace expression {
             return this.Value == ((CInt) obj).Value;
         }
         public override int GetHashCode() => Value.GetHashCode();
+    }
+
+    class CBool : Literal {
+        public bool Value { get; }
+        public CBool(bool value) => Value = value;
+        public override string ToString() => $"{Value}";
     }
 
     class Var : Expr {
@@ -104,6 +112,8 @@ namespace expression {
     class Lt : BinOperator { public Lt(Expr left, Expr right) : base("<", left, right) {} }
     class Geq : BinOperator { public Geq(Expr left, Expr right) : base(">=", left, right) {} }
     class Leq : BinOperator { public Leq(Expr left, Expr right) : base("<=", left, right) {} }
+
+    class App : BinOperator { public App(Expr left, Expr right) : base("", left, right) {} }
 
     class Not : Expr {
         public Expr Body { get; }
@@ -139,13 +149,6 @@ namespace expression {
         public override string ToString() => $"\\{Variable} -> {Body}";
     }
 
-    class App : Expr {
-        public Expr Left { get; }
-        public Expr Right { get; }
-        public App(Expr left, Expr right) => (Left, Right) = (left, right);
-        public override string ToString() => $"({Left}) ({Right})";
-    }
-
     class If : Expr {
         public Expr Condition { get; }
         public Expr Left { get; }
@@ -154,9 +157,4 @@ namespace expression {
         public override string ToString() => $"if {Condition} then {Left} else {Right}";
     }
 
-    class CBool : Expr {
-        public bool Value { get; }
-        public CBool(bool value) => Value = value;
-        public override string ToString() => $"{Value}";
-    }
 }

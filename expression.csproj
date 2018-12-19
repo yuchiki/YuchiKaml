@@ -20,5 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Sprache" Version="2.2.0" />
+    <Content Include="UndefinedChecker.cs" />
+    <Content Include="UndefinedVariableChecker.cs" />
+    <Content Include="SyntaxExtentions.cs" />
+    <Content Include="EnvironmentExtension.cs" />
   </ItemGroup>
 </Project>

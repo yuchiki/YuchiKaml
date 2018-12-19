@@ -54,15 +54,15 @@ namespace expression {
                     return BinCompOpCalculate(op.Left, op.Right, (x, y) => x <= y, env);
                 case Bind b:
                     {
-                        return b.ExprBody.Calculate(env.Add(b.Variable, b.VarBody.Calculate(env)));
+                        return b.ExprBody.Calculate(env.Update(b.Variable, b.VarBody.Calculate(env)));
                     }
                 case Abs abs:
                     return new Closure(env, abs.Variable, abs.Body);
                 case LetRec letRec:
                     {
                         var Closure = new Closure(env, letRec.Argument, letRec.VarBody);
-                        Closure.Env = Closure.Env.Add(letRec.Function, Closure);
-                        var newEnv = env.Add(letRec.Function, Closure);
+                        Closure.Env = Closure.Env.Update(letRec.Function, Closure);
+                        var newEnv = env.Update(letRec.Function, Closure);
                         return letRec.ExprBody.Calculate(newEnv);
                     }
                 case Not n:
@@ -74,7 +74,7 @@ namespace expression {
                     {
                         var left = app.Left.EvalTo<Closure>(env);
                         var right = app.Right.Calculate(env);
-                        return left.Body.Calculate(left.Env.Add(left.Variable, right));
+                        return left.Body.Calculate(left.Env.Update(left.Variable, right));
                     }
                 case If ifExpr:
                     {
