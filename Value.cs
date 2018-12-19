@@ -1,7 +1,10 @@
 namespace expression {
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using System;
+
+    using Environment = System.Collections.Immutable.ImmutableDictionary<string, Value>;
 
     public abstract class Value {}
 
@@ -47,7 +50,7 @@ namespace expression {
     }
 
     public class Closure : Value {
-        public Environment Env { get; }
+        public Environment Env { get; set; }
         public string Variable { get; }
         public Expr Body { get; }
         public Closure(Environment env, string variable, Expr body) => (Env, Variable, Body) = (env, variable, body);

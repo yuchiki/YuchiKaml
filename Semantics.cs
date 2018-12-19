@@ -3,6 +3,8 @@ namespace expression {
     using System.Linq;
     using System;
 
+    using Environment = System.Collections.Immutable.ImmutableDictionary<string, Value>;
+
     public static class ExprExtensions {
         static Value Calculate(this Expr e, Environment env) {
             //Console.WriteLine($"env:{env}");
@@ -52,16 +54,15 @@ namespace expression {
                     return BinCompOpCalculate(op.Left, op.Right, (x, y) => x <= y, env);
                 case Bind b:
                     {
-                        var newEnv = env.AddAndCopy(b.Variable, b.VarBody.Calculate(env));
-                        return b.ExprBody.Calculate(newEnv);
+                        return b.ExprBody.Calculate(env.Add(b.Variable, b.VarBody.Calculate(env)));
                     }
                 case Abs abs:
                     return new Closure(env, abs.Variable, abs.Body);
                 case LetRec letRec:
                     {
                         var Closure = new Closure(env, letRec.Argument, letRec.VarBody);
-                        Closure.Env[letRec.Function] = Closure;
-                        var newEnv = env.AddAndCopy(letRec.Function, Closure);
+                        Closure.Env = Closure.Env.Add(letRec.Function, Closure);
+                        var newEnv = env.Add(letRec.Function, Closure);
                         return letRec.ExprBody.Calculate(newEnv);
                     }
                 case Not n:
@@ -73,7 +74,7 @@ namespace expression {
                     {
                         var left = app.Left.EvalTo<Closure>(env);
                         var right = app.Right.Calculate(env);
-                        return left.Body.Calculate(left.Env.AddAndCopy(left.Variable, right));
+                        return left.Body.Calculate(left.Env.Add(left.Variable, right));
                     }
                 case If ifExpr:
                     {
@@ -89,7 +90,7 @@ namespace expression {
             }
         }
 
-        public static Value Calculate(this Expr e) => e.Calculate(new Environment());
+        public static Value Calculate(this Expr e) => e.Calculate(Environment.Empty);
 
         static VInt BinOpCalculate(Expr left, Expr right, Func<int, int, int> f, Environment env) {
             var l = left.EvalTo<VInt>(env);
