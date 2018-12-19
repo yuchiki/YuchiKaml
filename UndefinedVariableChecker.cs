@@ -49,8 +49,8 @@ namespace expression {
                         }
                     case LetRec letRec:
                         {
-                            var newOccurrence = occurrence.Add(letRec.Argument);
-                            Check(letRec.VarBody, newOccurrence);
+                            var newOccurrence = occurrence.Add(letRec.Function);
+                            Check(letRec.VarBody, newOccurrence.Add(letRec.Argument));
                             Check(letRec.ExprBody, newOccurrence);
                             return;
                         }

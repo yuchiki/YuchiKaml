@@ -29,10 +29,53 @@ namespace expression {
                     else m
                     in gcd 120 45";
 
+            var listProgram = $@"
+            let makeTuple a b condition = if condition then a else b in
+let fst t = t true in
+let snd t = t false in
+
+let Nil = {'"'}nil{'"'} in
+let isNil l = l == Nil in
+let Cons x xs =
+    makeTuple x xs in
+
+let rec map f l =
+    if isNil l then Nil
+    else
+        let car = fst l in
+        let cdr = snd l in
+        Cons (f car) (map f cdr) in
+
+let rec fold i f l =
+    if isNil l then i
+    else
+        let car = fst l in
+        let cdr = snd l in
+        fold (f i car) f cdr in
+
+let rec filter f l =
+    if isNil l then Nil
+    else
+        let car = fst l in
+        let cdr = snd l in
+        if f car then Cons car (filter f cdr)
+        else filter f cdr in
+
+let rec range minValue maxValue =
+    if minValue > maxValue then Nil
+    else Cons minValue (range (minValue + 1) maxValue) in
+
+let isEven x = x / 2 * 2 == x in
+let list = range 0 10 in
+let list = filter isEven list in
+let list = map (\x -> x * x) list in
+fold 0 (\x -> \y -> x + y) list";
+
             ExprParser.MainParser.Parse(comp1).Calculate().ShouldBeEqual(new VInt(4), "numeral expression");
             ExprParser.MainParser.Parse(letTest).Calculate().ShouldBeEqual(new VInt(5), "let");
             ExprParser.MainParser.Parse(recSumProgram).Calculate().ShouldBeEqual(new VInt(55), "let rec and recursion");
             ExprParser.MainParser.Parse(gcdProgram).Calculate().ShouldBeEqual(new VInt(15), "multi let rec: gcd");
+            ExprParser.MainParser.Parse(listProgram).Calculate().ShouldBeEqual(new VInt(220), "long example: list");
         }
 
         public static void ParsingTest() {
