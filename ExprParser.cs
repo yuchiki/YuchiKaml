@@ -91,7 +91,6 @@ namespace expression {
         from e2 in MainParser
         select new Bind(x, variables.Reverse().Aggregate(e1, Flip<string, Expr, Expr>(Expr.Abs)), e2);
 
-        // TODO: make it parse multiple variables
         public static readonly Parser<Expr> LetRecParser =
             from _ in "let".ToToken()
         from __ in "rec".ToToken()
