@@ -27,8 +27,9 @@ namespace expression {
             from str in OrParser("true".ToToken(), "false".ToToken())
         select new CBool(str == "true");
 
+        // FIXME: It can parse "spin", but cannot parse "init",
         public static readonly Parser<string> IDParser =
-            Parse.Letter.AtLeastOnce().Text().ExceptTokens(KeyWords).Token();
+            Parse.Letter.AtLeastOnce().Text().Token().ExceptTokens(KeyWords);
 
         public static readonly Parser<Expr> VarParser =
             from id in IDParser select new Var(id);
