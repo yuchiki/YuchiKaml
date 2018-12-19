@@ -18,7 +18,7 @@
             var program = ExprParser.MainParser.Parse(text);
             try {
 
-                //       UndefinedVariableChecker.Check(program);
+                UndefinedVariableChecker.Check(program);
             } catch (VariableUndefinedException ex) {
                 Console.Error.WriteLine($"undefined variable {ex.Variable} detected in");
                 ex.PartialExpressions.ForEach(Console.WriteLine);
