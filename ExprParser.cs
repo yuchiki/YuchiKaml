@@ -145,14 +145,14 @@ namespace expression {
 
 /*
 
-        primary ::=  <unit> | <int> | <bool> | <ident> | (<expr>)
-        app ::= <primary> | <app> <primary>
-        unary ::= <app> | !<app> |
-        multiplicative ::= <unary> | <multiplicative> * <unary> | <multiplicative> / <unary>
-        additive ::= <unary> | <additive> + <unary> | <additive> - <unary>
-        relational ::=  <additive> | <relational> <= <additive> | <relational> < <additive> | <relational> >= <additive> | <relational> > <additive> |
-        equality ::= <relational> | <equality> == <relational> | <equality> != <relational>
-        logical_and ::= <equality> | <logical_and> && <equality>
-        logical_or ::= <equality> | <logical_or> && <equality>
-        topexpr ::= <logical_or> | if <expr> then <expr> else <expr> | let rec <ident> <ident> = <expr> in <expr> | let <ident> = <expr> in <expr> | \ <ident> -> <expr>
+        primary 0 ::=  <unit> | <int> | <bool> | <ident> | (<expr>)
+        app 1::= <primary> | <app> <primary>
+        unary 2 ::= <app> | !<app> |
+        multiplicative 3::= <unary> | <multiplicative> * <unary> | <multiplicative> / <unary>
+        additive 4::= <unary> | <additive> + <unary> | <additive> - <unary>
+        relational 5::=  <additive> | <relational> <= <additive> | <relational> < <additive> | <relational> >= <additive> | <relational> > <additive> |
+        equality 6::= <relational> | <equality> == <relational> | <equality> != <relational>
+        logical_and 7::= <equality> | <logical_and> && <equality>
+        logical_or 8::= <equality> | <logical_or> && <equality>
+        topexpr 9::= <logical_or> | if <expr> then <expr> else <expr> | let rec <ident> <ident> = <expr> in <expr> | let <ident> = <expr> in <expr> | \ <ident> -> <expr>
  */

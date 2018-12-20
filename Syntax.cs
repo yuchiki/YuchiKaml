@@ -10,8 +10,10 @@ namespace expression {
         // Because Only in closure are unevaluated values allowed to be.
      */
 
-    // TODO: print prettily
     public abstract class Expr {
+        public int Priority { get; }
+        public Expr(int priority) => Priority = priority;
+
         public T Cast<T>() where T : Expr => (T) this;
 
         public static readonly Expr Unit = new Unit();
@@ -36,16 +38,23 @@ namespace expression {
         public static Expr Abs(string variable, Expr body) => new Abs(variable, body);
         public static Expr App(Expr l, Expr r) => new App(l, r);
         public static Expr If(Expr condition, Expr left, Expr right) => new If(condition, left, right);
+
+        public string ShowLeft(Expr e) => e.Priority <= Priority ? $"{e}" : $"({e})";
+        public string ShowRight(Expr e) => e.Priority < Priority ? $"{e}" : $"({e})";
+        public string ShowMono(Expr e) => e.Priority < Priority ? $"{e}" : $"({e})";
+
     }
 
-    abstract class Literal : Expr {}
+    abstract class Literal : Expr {
+        public Literal() : base(0) {}
+    }
 
     abstract class BinOperator : Expr {
         string Symbol { get; }
         public Expr Left { get; }
         public Expr Right { get; }
-        public BinOperator(string symbol, Expr left, Expr right) => (Symbol, Left, Right) = (symbol, left, right);
-        public override string ToString() => $"({Left}) {Symbol} ({Right})";
+        public BinOperator(string symbol, int priority, Expr left, Expr right) : base(priority) => (Symbol, Left, Right) = (symbol, left, right);
+        public override string ToString() => $"{ShowLeft(Left)} {Symbol} {ShowRight(Right)}";
     }
 
     class Unit : Literal {
@@ -89,7 +98,7 @@ namespace expression {
 
     class Var : Expr {
         public string Name { get; }
-        public Var(string name) => Name = name;
+        public Var(string name) : base(0) => Name = name;
         public override string ToString() => Name;
 
         public override bool Equals(object obj) {
@@ -99,35 +108,36 @@ namespace expression {
         public override int GetHashCode() => Name.GetHashCode();
     }
 
-    class Add : BinOperator { public Add(Expr left, Expr right) : base("+", left, right) {} }
-    class Mul : BinOperator { public Mul(Expr left, Expr right) : base("*", left, right) {} }
-    class Sub : BinOperator { public Sub(Expr left, Expr right) : base("-", left, right) {} }
-    class Div : BinOperator { public Div(Expr left, Expr right) : base("/", left, right) {} }
-
-    class And : BinOperator { public And(Expr left, Expr right) : base("&", left, right) {} }
-    class Or : BinOperator { public Or(Expr left, Expr right) : base("|", left, right) {} }
-
-    class Eq : BinOperator { public Eq(Expr left, Expr right) : base("==", left, right) {} }
-    class Neq : BinOperator { public Neq(Expr left, Expr right) : base("!=", left, right) {} }
-    class Gt : BinOperator { public Gt(Expr left, Expr right) : base(">", left, right) {} }
-    class Lt : BinOperator { public Lt(Expr left, Expr right) : base("<", left, right) {} }
-    class Geq : BinOperator { public Geq(Expr left, Expr right) : base(">=", left, right) {} }
-    class Leq : BinOperator { public Leq(Expr left, Expr right) : base("<=", left, right) {} }
-
-    class App : BinOperator { public App(Expr left, Expr right) : base("", left, right) {} }
+    class App : BinOperator { public App(Expr left, Expr right) : base("", 1, left, right) {} }
 
     class Not : Expr {
         public Expr Body { get; }
-        public Not(Expr body) => Body = body;
+        public Not(Expr body) : base(2) => Body = body;
 
         public override string ToString() => $"!{Body}";
     }
+    class Mul : BinOperator { public Mul(Expr left, Expr right) : base("*", 3, left, right) {} }
+    class Div : BinOperator { public Div(Expr left, Expr right) : base("/", 3, left, right) {} }
+
+    class Add : BinOperator { public Add(Expr left, Expr right) : base("+", 4, left, right) {} }
+    class Sub : BinOperator { public Sub(Expr left, Expr right) : base("-", 4, left, right) {} }
+
+    class Gt : BinOperator { public Gt(Expr left, Expr right) : base(">", 5, left, right) {} }
+    class Lt : BinOperator { public Lt(Expr left, Expr right) : base("<", 5, left, right) {} }
+    class Geq : BinOperator { public Geq(Expr left, Expr right) : base(">=", 5, left, right) {} }
+    class Leq : BinOperator { public Leq(Expr left, Expr right) : base("<=", 5, left, right) {} }
+
+    class Eq : BinOperator { public Eq(Expr left, Expr right) : base("==", 6, left, right) {} }
+    class Neq : BinOperator { public Neq(Expr left, Expr right) : base("!=", 6, left, right) {} }
+
+    class And : BinOperator { public And(Expr left, Expr right) : base("&", 7, left, right) {} }
+    class Or : BinOperator { public Or(Expr left, Expr right) : base("|", 8, left, right) {} }
 
     class Bind : Expr {
         public string Variable { get; }
         public Expr VarBody { get; }
         public Expr ExprBody { get; }
-        public Bind(string variable, Expr varBody, Expr exprBody) => (Variable, VarBody, ExprBody) = (variable, varBody, exprBody);
+        public Bind(string variable, Expr varBody, Expr exprBody) : base(9) => (Variable, VarBody, ExprBody) = (variable, varBody, exprBody);
 
         public override string ToString() => $"let {Variable} = {VarBody} in {ExprBody}";
     }
@@ -137,7 +147,7 @@ namespace expression {
         public string Argument { get; }
         public Expr VarBody { get; }
         public Expr ExprBody { get; }
-        public LetRec(string function, string argument, Expr varBody, Expr exprBody) => (Function, Argument, VarBody, ExprBody) = (function, argument, varBody, exprBody);
+        public LetRec(string function, string argument, Expr varBody, Expr exprBody) : base(9) => (Function, Argument, VarBody, ExprBody) = (function, argument, varBody, exprBody);
 
         public override string ToString() => $"let {Function} {Argument} = {VarBody} in {ExprBody}";
     }
@@ -145,7 +155,7 @@ namespace expression {
     class Abs : Expr {
         public string Variable { get; }
         public Expr Body { get; }
-        public Abs(string variable, Expr body) => (Variable, Body) = (variable, body);
+        public Abs(string variable, Expr body) : base(9) => (Variable, Body) = (variable, body);
 
         public override string ToString() => $"\\{Variable} -> {Body}";
     }
@@ -154,7 +164,7 @@ namespace expression {
         public Expr Condition { get; }
         public Expr Left { get; }
         public Expr Right { get; }
-        public If(Expr condition, Expr left, Expr right) => (Condition, Left, Right) = (condition, left, right);
+        public If(Expr condition, Expr left, Expr right) : base(9) => (Condition, Left, Right) = (condition, left, right);
         public override string ToString() => $"if {Condition} then {Left} else {Right}";
     }
 
