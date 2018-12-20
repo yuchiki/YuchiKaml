@@ -21,7 +21,7 @@
                 UndefinedVariableChecker.Check(program);
             } catch (VariableUndefinedException ex) {
                 Console.Error.WriteLine($"undefined variable {ex.Variable} detected in");
-                ex.PartialExpressions.ForEach(Console.WriteLine);
+                ex.PartialExpressions.Select(x => x + "\n---------------------------------------------").ToList().ForEach(Console.WriteLine);
                 Environment.Exit(1);
             }
             var value = program.Calculate();

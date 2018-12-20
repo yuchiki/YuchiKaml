@@ -24,5 +24,6 @@
     <Content Include="UndefinedVariableChecker.cs" />
     <Content Include="SyntaxExtentions.cs" />
     <Content Include="EnvironmentExtension.cs" />
+    <PackageReference Include="System.Interactive" Version="3.2.0" />
   </ItemGroup>
 </Project>

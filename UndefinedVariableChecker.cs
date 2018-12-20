@@ -15,7 +15,7 @@ namespace expression {
         public VariableUndefinedException(string variable, ImmutableList<Expr> partialExpressions) =>
             (Variable, PartialExpressions) = (variable, partialExpressions);
         public VariableUndefinedException(Var variable) : this(variable.Name, ImmutableList<Expr>.Empty) {}
-        public VariableUndefinedException(Expr currentExpression, VariableUndefinedException ex) : this(ex.Variable, currentExpression.Size() > 20 ? ex.PartialExpressions : ex.PartialExpressions.Add(currentExpression)) {}
+        public VariableUndefinedException(Expr currentExpression, VariableUndefinedException ex) : this(ex.Variable, currentExpression.Size() > 50 ? ex.PartialExpressions : ex.PartialExpressions.Add(currentExpression)) {}
     }
 
     public static class UndefinedVariableChecker {

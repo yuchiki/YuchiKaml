@@ -1,4 +1,7 @@
 namespace expression {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /*
         expression e ::= n | s | x | e + e | e * e | e - e | e / e | let x1 ... xn = e in e | \x -> e | e e
             | b | e && e | e || e | !e
@@ -70,7 +73,7 @@ namespace expression {
     class CString : Literal {
         public string Value { get; }
         public CString(string value) => Value = value;
-        public override string ToString() => $"{Value}";
+        public override string ToString() => $"\"{Value}\"";
         public override bool Equals(object obj) {
             if (obj == null || this.GetType() != obj.GetType()) return false;
             return this.Value == ((CString) obj).Value;
@@ -108,7 +111,11 @@ namespace expression {
         public override int GetHashCode() => Name.GetHashCode();
     }
 
-    class App : BinOperator { public App(Expr left, Expr right) : base("", 1, left, right) {} }
+    class App : BinOperator {
+        public App(Expr left, Expr right) : base("", 1, left, right) {}
+        public override string ToString() => $"{ShowLeft(Left)} {ShowRight(Right)}";
+
+    }
 
     class Not : Expr {
         public Expr Body { get; }
@@ -139,7 +146,7 @@ namespace expression {
         public Expr ExprBody { get; }
         public Bind(string variable, Expr varBody, Expr exprBody) : base(9) => (Variable, VarBody, ExprBody) = (variable, varBody, exprBody);
 
-        public override string ToString() => $"let {Variable} = {VarBody} in {ExprBody}";
+        public override string ToString() => $"let {Variable} =\n{PrintHelper.Indent($"{VarBody}")} in\n{ExprBody}";
     }
 
     class LetRec : Expr {
@@ -149,7 +156,7 @@ namespace expression {
         public Expr ExprBody { get; }
         public LetRec(string function, string argument, Expr varBody, Expr exprBody) : base(9) => (Function, Argument, VarBody, ExprBody) = (function, argument, varBody, exprBody);
 
-        public override string ToString() => $"let {Function} {Argument} = {VarBody} in {ExprBody}";
+        public override string ToString() => $"let rec {Function} {Argument} =\n{PrintHelper.Indent($"{VarBody}")} in\n{ExprBody}";
     }
 
     class Abs : Expr {
@@ -157,7 +164,7 @@ namespace expression {
         public Expr Body { get; }
         public Abs(string variable, Expr body) : base(9) => (Variable, Body) = (variable, body);
 
-        public override string ToString() => $"\\{Variable} -> {Body}";
+        public override string ToString() => $"\\{Variable} ->\n{PrintHelper.Indent($"{Body}")}";
     }
 
     class If : Expr {
@@ -165,7 +172,12 @@ namespace expression {
         public Expr Left { get; }
         public Expr Right { get; }
         public If(Expr condition, Expr left, Expr right) : base(9) => (Condition, Left, Right) = (condition, left, right);
-        public override string ToString() => $"if {Condition} then {Left} else {Right}";
+        public override string ToString() => $"if {Condition} then\n{PrintHelper.Indent($"{Left}")}\nelse\n{PrintHelper.Indent($"{Right}")}";
     }
 
+    static class PrintHelper {
+        public static int IndentSize => 4;
+        public static string Spaces => new string(Enumerable.Repeat(' ', IndentSize).ToArray());
+        public static string Indent(string source) => string.Join("\n", source.Split("\n").Select(x => Spaces + x));
+    }
 }
