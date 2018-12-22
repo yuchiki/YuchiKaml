@@ -30,5 +30,6 @@
     <Content Include="Executor.cs" />
     <Content Include="SourceCode.cs" />
     <Content Include="BuiltIns.cs" />
+    <Content Include="IOLibrary" />
   </ItemGroup>
 </Project>

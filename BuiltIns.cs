@@ -14,10 +14,9 @@ namespace expression {
             new [] {
                 new BuiltInFunctionPair("read_char", ReadChar),
                     new BuiltInFunctionPair("read_line", ReadLine),
-                    new BuiltInFunctionPair("put_string", PutString),
-                    new BuiltInFunctionPair("chars_of_string", CharsOfString),
-                    new BuiltInFunctionPair("concat_strings", ConcatStrings)
-
+                    new BuiltInFunctionPair("print_string", PutString),
+                    new BuiltInFunctionPair("int_of_string", IntOfString),
+                    new BuiltInFunctionPair("string_of_int", StringOfInt)
             }.ToImmutableDictionary();
 
         private static Value ReadChar(Value _) => new VString(((char) Console.Read()).ToString());
@@ -33,6 +32,12 @@ namespace expression {
         // TODO: Implement it.
         private static Value ConcatStrings(Value v) =>
             throw new NotImplementedException();
+
+        private static Value IntOfString(Value v) =>
+            new VInt(int.Parse(((VString) v).Value));
+
+        private static Value StringOfInt(Value v) =>
+            new VString(((VInt) v).Value.ToString());
 
     }
 }

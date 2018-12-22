@@ -14,7 +14,8 @@ namespace expression {
             var program = ExprParser.MainParser.Parse(commentLess);
             Console.WriteLine("parsed");
             CheckUndefinedVar(program);
-            Console.WriteLine("checked");
+            Console.WriteLine("varable checked");
+            Console.WriteLine("ready to execute");
             var value = program.Calculate();
             Console.WriteLine($"Program Ended with return value: {value}");
         }
