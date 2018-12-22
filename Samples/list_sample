@@ -1,0 +1,8 @@
+#include"list"
+
+// main
+let isEven x = x / 2 * 2 == x in
+let list = range 0 10 in
+let list = filter isEven list in
+let list = map (\x -> x * x) list in
+fold 0 (\x -> \y -> x + y) list

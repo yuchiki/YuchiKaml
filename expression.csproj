@@ -25,5 +25,9 @@
     <Content Include="SyntaxExtentions.cs" />
     <Content Include="EnvironmentExtension.cs" />
     <PackageReference Include="System.Interactive" Version="3.2.0" />
+    <Content Include="Preprocess.cs" />
+    <Content Include="Preprocessor.cs" />
+    <Content Include="Executor.cs" />
+    <Content Include="SourceCode.cs" />
   </ItemGroup>
 </Project>

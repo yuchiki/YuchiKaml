@@ -30,7 +30,7 @@ namespace expression {
                     in gcd 120 45";
 
             var listProgram = $@"
-            let makeTuple a b condition = if condition then a else b in
+let makeTuple a b condition = if condition then a else b in
 let fst t = t true in
 let snd t = t false in
 
