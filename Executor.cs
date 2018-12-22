@@ -16,7 +16,7 @@ namespace expression {
             CheckUndefinedVar(program);
             Console.WriteLine("checked");
             var value = program.Calculate();
-            Console.WriteLine($"return value is: {value}");
+            Console.WriteLine($"Program Ended with return value: {value}");
         }
 
         public static void CheckUndefinedVar(Expr program) {
