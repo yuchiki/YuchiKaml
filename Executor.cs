@@ -9,7 +9,6 @@ namespace expression {
         public static void Execute(SourceFile sourceFile) {
             var preprocessed = Preprocessor.ProcessDirective(sourceFile);
             var commentLess = CommentProcessor.DeleteComments(preprocessed);
-            Console.WriteLine(commentLess);
             var program = ExprParser.MainParser.Parse(commentLess);
             CheckUndefinedVar(program);
             var value = program.Calculate();
