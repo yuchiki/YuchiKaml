@@ -27,7 +27,8 @@ namespace expression {
                 case CBool cb:
                     return new VBool(cb.Value);
                 case Var v:
-                    return env[v.Name];
+                    return BuiltInFunctions.BuiltIns.ContainsKey(v.Name) ? new BuiltInClosure(BuiltInFunctions.BuiltIns[v.Name])
+                        : env[v.Name];
                 case Add a:
                     return BinOpCalculate(a.Left, a.Right, (x, y) => x + y, env);
                 case Mul a:
@@ -72,9 +73,20 @@ namespace expression {
                     }
                 case App app:
                     {
-                        var left = app.Left.EvalTo<Closure>(env);
+                        var evaluatedValue = app.Left.Calculate(env);
                         var right = app.Right.Calculate(env);
-                        return left.Body.Calculate(left.Env.Update(left.Variable, right));
+                        switch (evaluatedValue) {
+                            case Closure left:
+                                {
+                                    return left.Body.Calculate(left.Env.Update(left.Variable, right));
+                                }
+                            case BuiltInClosure left:
+                                {
+                                    return left.Function(right);
+                                }
+                            default:
+                                throw new ArgumentException();
+                        }
                     }
                 case If ifExpr:
                     {

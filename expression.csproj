@@ -29,5 +29,6 @@
     <Content Include="Preprocessor.cs" />
     <Content Include="Executor.cs" />
     <Content Include="SourceCode.cs" />
+    <Content Include="BuiltIns.cs" />
   </ItemGroup>
 </Project>

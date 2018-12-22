@@ -26,7 +26,7 @@ namespace expression {
                     case Literal lit:
                         return;
                     case Var variable:
-                        if (occurrence.Contains(variable.Name)) return;
+                        if (occurrence.Contains(variable.Name) || BuiltInFunctions.BuiltIns.ContainsKey(variable.Name)) return;
                         throw new VariableUndefinedException(variable.Name, ImmutableList<Expr>.Empty);
                     case BinOperator binOp:
                         Check(binOp.Left, occurrence);

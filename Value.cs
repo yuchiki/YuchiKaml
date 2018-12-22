@@ -6,6 +6,10 @@ namespace expression {
 
     using Environment = System.Collections.Immutable.ImmutableDictionary<string, Value>;
 
+    using BuiltInFunction = System.Func<Value, Value>;
+    using BuiltInFunctionPair =
+        System.Collections.Generic.KeyValuePair<string, System.Func<Value, Value>>;
+
     public abstract class Value {}
 
     public class VUnit : Value {
@@ -58,4 +62,10 @@ namespace expression {
         public override string ToString() => $"\\{Variable} -> {Body}";
     }
 
+    public class BuiltInClosure : Value {
+        public BuiltInFunction Function;
+        public BuiltInClosure(BuiltInFunction function) => Function = function;
+
+        public override string ToString() => $"BUILT-IN";
+    }
 }

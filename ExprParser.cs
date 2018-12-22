@@ -29,7 +29,7 @@ namespace expression {
 
         // FIXME: It can parse "spin", but cannot parse "init",
         public static readonly Parser<string> IDParser =
-            Parse.Letter.AtLeastOnce().Text().Token().ExceptTokens(KeyWords);
+            Parse.Letter.Or(Parse.Char('_')).AtLeastOnce().Text().Token().ExceptTokens(KeyWords);
 
         public static readonly Parser<Expr> VarParser =
             from id in IDParser select new Var(id);
