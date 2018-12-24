@@ -31,6 +31,7 @@
                 Environment.Exit(1);
             } else if (opt.FileName == null && !opt.IsTestMode) {
                 Console.Error.WriteLine(" File not designated.");
+                Console.Error.WriteLine("--help to see help.");
                 Environment.Exit(1);
             }
         }

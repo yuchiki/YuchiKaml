@@ -3,11 +3,16 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup>
+    <Configuration>Release</Configuration>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>./Out/</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Interactive" Version="3.2.0" />
+    <PackageReference Include="CommandLineParser" Version="2.3.0" />
+    <PackageReference Include="Sprache" Version="2.2.0" />
     <Content Include="Program.cs" />
     <Content Include=".vscode\settings.json" />
     <Content Include="Syntax.cs" />
@@ -17,15 +22,10 @@
     <Content Include="Test.cs" />
     <Content Include="TestSuits.cs" />
     <Content Include="ExprParser.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.3.65" />
-    <PackageReference Include="Sprache" Version="2.2.0" />
     <Content Include="UndefinedChecker.cs" />
     <Content Include="UndefinedVariableChecker.cs" />
     <Content Include="SyntaxExtentions.cs" />
     <Content Include="EnvironmentExtension.cs" />
-    <PackageReference Include="System.Interactive" Version="3.2.0" />
     <Content Include="Preprocess.cs" />
     <Content Include="Preprocessor.cs" />
     <Content Include="Executor.cs" />
@@ -36,4 +36,10 @@
     <Content Include="Logger.cs" />
     <Content Include="CommandLineOptions.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <_LibraryFiles Include="Library/*.*" />
+  </ItemGroup>
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+    <Copy SourceFiles="@(_LibraryFiles)" DestinationFolder="./Out/$(TargetFramework)/publish/Library" SkipUnchangedFiles="false" />
+  </Target>
 </Project>

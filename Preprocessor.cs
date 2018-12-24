@@ -13,7 +13,7 @@ namespace YuchikiML {
                 .Replace(source.Code, s => ProcessDirective(new SourceFile(source.DirectoryPath + "/" + s.Groups[1].Value)));
 
             var FullyIncluded = new Regex("#include<([\\w/.]+)>")
-                .Replace(locallyIncluded, s => ProcessDirective(new SourceFile(Environment.CurrentDirectory + "/Libraries/" + s.Groups[1].Value)));
+                .Replace(locallyIncluded, s => ProcessDirective(new SourceFile(Environment.CurrentDirectory + "/Library/" + s.Groups[1].Value)));
             return FullyIncluded;
         }
     }
