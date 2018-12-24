@@ -52,7 +52,7 @@ To be Described.
 #### Comment
 
 -   // .... end of line
--   (_ ... _)
+-   (* ... *)
 
 ### Semantics
 
