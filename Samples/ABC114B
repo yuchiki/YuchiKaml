@@ -3,7 +3,7 @@
 #include<list>
 #include<math>
 
-let s = chars_of_string (read_line ()) in
+let s = read_line () |> chars_of_string in
 map (flip drop s >> take 3 >> concat_strings >> num_of_string) (range 0 (length s - 3))
     |> map (subt 753 >> abs)
     |> fold 100000 min
