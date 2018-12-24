@@ -9,6 +9,24 @@ YuchiKaml is a dynamic typed language with ML-like surface grammar.
 
 This interpreter is written for my personal purpose to get accustomed with Sprache.
 
+## Install(For Windows, Linux and OSX)
+
+1. install dotnet command following an [install instruction of dotnet command](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial)
+
+2. clone this repositotry and do `make` in the directory.
+
+```sh
+cd your/working/directory
+git clone git://github.com/yuchiki/YuchiKaml.git
+make
+```
+
+3. copy YuchikiML_build to anywhere you want, and put the following line on your ~/.bashrc.
+`export PATH=/path/to/YuchikiML_build:$PATH`
+
+4. `source ~./bashrc`
+
+
 ## YuchiKaml Language
 
 I define and explain YuchiKaml Language.
