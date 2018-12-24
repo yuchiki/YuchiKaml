@@ -6,7 +6,7 @@ namespace YuchikiML {
     using Environment = System.Collections.Immutable.ImmutableDictionary<string, Value>;
 
     public static class ExprExtensions {
-        static Value Calculate(this Expr e, Environment env) {
+        public static Value Calculate(this Expr e, Environment env) {
             Logger.LogTrace(e.GetType().ToString());
             var v = Calculate_(e, env);
             return v;
@@ -84,7 +84,7 @@ namespace YuchikiML {
                                 }
                             default:
                                 Logger.LogError($"left:{app.Left}");
-                                Logger.LogError($"left:{evaluatedValue}");
+                                Logger.LogError($"left:{evaluatedValue.GetType()}");
                                 throw new ArgumentException();
                         }
                     }

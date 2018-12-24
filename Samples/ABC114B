@@ -3,7 +3,7 @@
 #include<math>
 
 let s = chars_of_string (read_line ()) in
-let nums = map (\x-> num_of_string (concat_strings (take 3 (drop x (s))))) (range 0 7) in
+let nums = map (\x-> num_of_string (concat_strings (take 3 (drop x s)))) (range 0 (length s - 3)) in
 let diffs = map (\x -> abs (x-753)) nums in
-let num_min = fold min diffs in
-print num_min
+let smallest = fold 100000 min diffs in
+print_endline smallest

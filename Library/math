@@ -1,3 +1,3 @@
-let abs n = if n > 0 then n else 0 - n in
-let min m n = if m > n then n else m in
-let max m n = if m > n then m else n in
+let abs n = is_num n; if n > 0 then n else 0 - n in
+let min m n = is_num m; is_num n; if m > n then n else m in
+let max m n = is_num m; is_num n; if m > n then m else n in

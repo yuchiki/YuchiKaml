@@ -18,7 +18,11 @@ namespace YuchikiML {
                     new BuiltInFunctionPair("num_of_string", IntOfString),
                     new BuiltInFunctionPair("string_of_num", StringOfInt),
                     new BuiltInFunctionPair("chars_of_string", CharsOfString),
-                    new BuiltInFunctionPair("concat_strings", ConcatStrings)
+                    new BuiltInFunctionPair("concat_strings", ConcatStrings),
+                    new BuiltInFunctionPair("is_num", IsNum),
+                    new BuiltInFunctionPair("is_bool", IsBool),
+                    new BuiltInFunctionPair("is_string", IsString),
+                    new BuiltInFunctionPair("is_closure", IsClosure)
             }.ToImmutableDictionary();
 
         private static Value ReadChar(Value _) => new VString(((char) Console.Read()).ToString());
@@ -35,11 +39,14 @@ namespace YuchikiML {
 
         private static Value ConcatStrings(Value v) {
             var str = "";
-            Expr e = new Abs(((Closure) v).Variable, ((Closure) v).Body);
-            while (!e.Equals(new CString("nil"))) {
-                var ifExpr = (If) (((Abs) e).Body);
-                str += ((CString) ifExpr.Left).Value;
-                e = ifExpr.Right;
+            while (!v.Equals(new VString("nil"))) {
+                var left = (Closure) v;
+
+                var car = (VString) left.Body.Calculate(left.Env.Update(left.Variable, new VBool(true)));
+                var cdr = left.Body.Calculate(left.Env.Update(left.Variable, new VBool(false)));
+                str += car.Value;
+                v = cdr;
+
             }
             return new VString(str);
         }
@@ -50,5 +57,24 @@ namespace YuchikiML {
         private static Value StringOfInt(Value v) =>
             new VString(((VInt) v).Value.ToString());
 
+        private static Value IsNum(Value v) {
+            if (v is VInt) return new VUnit();
+            throw new InvalidCastException();
+        }
+
+        private static Value IsBool(Value v) {
+            if (v is VBool) return new VUnit();
+            throw new InvalidCastException();
+        }
+
+        private static Value IsString(Value v) {
+            if (v is VString) return new VUnit();
+            throw new InvalidCastException();
+        }
+
+        private static Value IsClosure(Value v) {
+            if (v is Closure || v is BuiltInClosure) return new VUnit();
+            throw new InvalidCastException();
+        }
     }
 }
