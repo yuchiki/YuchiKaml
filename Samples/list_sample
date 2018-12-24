@@ -1,10 +1,11 @@
 #include<list>
 #include<IO>
 
-// main
 let isEven x = x / 2 * 2 == x in
+
+// show list pretty
 let show_list l =
-    let _ = map (\x -> let _ = print_num x in print_string " ") l in
+    let _ = map (\x -> print_num x; print_string " ") l in
     print_newline () in
 
 let main _ =
@@ -14,11 +15,11 @@ let main _ =
     show_list list;
 
     let list = filter isEven list in
-    print_string "evens are: ";
+    print_string "     evens are: ";
     show_list list;
 
     let list = map (\x -> x * x) list in
-    print_string "squares are: ";
+    print_string "   squares are: ";
     show_list list;
 
     print_string "And the sum is: ";
