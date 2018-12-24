@@ -1,0 +1,33 @@
+\subsection{Syntax}
+
+The grammar of YuchiKaml is defined by the following BNF equations:
+
+\begin{align*}
+    e \defeq    & () \mid x \mid n \mid \trueToken \mid \falseToken \mid (e)\\
+                &\mid e\ e \mid \logNot e\\
+                &\mid e * e \mid e / e\\
+                &\mid e + e \mid e - e\\
+                &\mid e \leq e \mid e < e \mid e \geq e \mid e > e\\
+                &\mid e = e \mid e \not= e\\
+                &\mid e \logAnd e\\
+                &\mid e \logOr e\\
+                &\mid e \triangleright e \mid e \composition e\\
+                &\mid \ifToken e \thenToken e \elseToken e \mid \letToken (\recToken) x\ \tilde{a} = e \inToken e \mid \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e\mid \lambda x \rightarrow e
+\end{align*}
+
+The operators defined in earlier rows have stronger precedences than the operators defined in later rows.
+For example, $1 + 2 * 3$ is not parsed as $(1 + 2) * 3$, but $1 + ( 2 * 3)$.
+
+In real source codes, the symbols above are notated as follows:
+
+\begin{align*}
+    &\leq & <=\\
+    &\geq & >=\\
+    &\not= & !=\\
+    &\logAnd & \&\&\\
+    &\logOr & ||\\
+    &\triangleright & |>\\
+    &\composition & >>\\
+    &\lambda & \backslash\\
+    &\rightarrow & ->
+\end{align*}

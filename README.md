@@ -5,7 +5,7 @@ Toy Language Interpreter using Sprache, a C# Parser Combinator language.
 ## What is this
 
 This is an interpreter of YuchiKaml, a toy language designed by me.
-YuchiKaml is a dynamic typed language with ML-like surface grammar.
+YuchiKaml is a dynamic typed language with ML-like surface grammar. For further specification, see the [document](document/main.pdf)
 
 This interpreter is written for my personal purpose to get accustomed with Sprache.
 
