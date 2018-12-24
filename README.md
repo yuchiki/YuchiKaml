@@ -23,6 +23,7 @@ make
 ```
 
 3. copy YuchikiML_build to anywhere you want, and put the following line on your ~/.bashrc.
+
 `export PATH=/path/to/YuchikiML_build:$PATH`
 
 4. `source ~./bashrc`
@@ -69,7 +70,10 @@ YuchiKaml interpreter consists of YuchiKaml Preprocessor, Parser and Runner.
 
 ### Usage
 
-To be described
+`YuchikiML *Filename*`
+
+For further information, 
+`YuchikiML --help`
 
 ### Preprocess
 
