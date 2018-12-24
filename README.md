@@ -2,7 +2,7 @@
 
 Toy Language Interpreter using Sprache, a C# Parser Combinator language.
 
-## What is this?
+## What is this
 
 This is an interpreter of YuchiKaml, a toy language designed by me.
 YuchiKaml is a dynamic typed language with ML-like surface grammar.
@@ -12,7 +12,6 @@ This interpreter is written for my personal purpose to get accustomed with Sprac
 ## Install(For Windows, Linux and OSX)
 
 1. install dotnet command following an [install instruction of dotnet command](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial)
-
 2. clone this repository and do `make` in the directory.
 
 ```sh
@@ -22,11 +21,9 @@ cd YuchikiKaml
 make
 ```
 
-3. copy YuchikiML_build to anywhere you want, and put the following line on your ~/.bashrc.
-
-`export PATH=/path/to/YuchikiML_build:$PATH`
-
-4. `source ~./bashrc`
+3. copy YuchikiML_build to anywhere you want.
+4. put the following line on your ~/.bashrc: `export PATH=/path/to/YuchikiML_build:$PATH`
+5. `source ~./bashrc`
 
 ## YuchiKaml Language
 
@@ -49,7 +46,7 @@ To be Described.
 -   \<multiplicative\> **::=** \<unary\> **|** \<multiplicative\> **\*** \<unary\> **|** \<multiplicative\> **/** \<unary\>
 -   \<unary\> **::=** \<app\> **|** **!**\<unary\>
 -   \<app\> **::=** \<primary\> **|** \<app\> \*<primary\>
--   \<primary\> 0 **::=** \<unit\> **|** \<int\> **|** \<bool\> **|** \<ident\> **|** **(**\<expr\>**)**
+-   \<primary\> **::=** \<unit\> **|** \<int\> **|** \<bool\> **|** \<ident\> **|** **(**\<expr\>**)**
 
 #### Comment
 
