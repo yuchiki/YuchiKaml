@@ -38,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <_LibraryFiles Include="Library/*.*" />
+    <Content Include="Samples\ABC114B" />
+    <Content Include="Library\math" />
+    <Content Include="Library\ath" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Copy SourceFiles="@(_LibraryFiles)" DestinationFolder="./Out/$(TargetFramework)/publish/Library" SkipUnchangedFiles="false" />

@@ -35,3 +35,11 @@ let rec filter f l =
 let rec range minValue maxValue =
     if minValue > maxValue then Nil
     else Cons minValue (range (minValue + 1) maxValue) in
+
+let rec take n l =
+    if n == 0 then "nil"
+    else Cons (fst n) (take (n-1) (snd l)) in
+let rec drop n l =
+    if n == 0 then l
+    else take (n-1) (snd l) in
+let nth n l = fst (drop n l) in

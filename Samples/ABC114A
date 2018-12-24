@@ -1,0 +1,5 @@
+#include<IO>
+
+let x = read_num () in
+let ans = if x == 3 || x == 5 || x == 7 then "YES" else "NO" in
+print_endline ans
