@@ -18,10 +18,12 @@ This interpreter is written for my personal purpose to get accustomed with Sprac
 ```sh
 cd your/working/directory
 git clone git://github.com/yuchiki/YuchiKaml.git
+cd YuchikiKaml
 make
 ```
 
 3. copy YuchikiML_build to anywhere you want, and put the following line on your ~/.bashrc.
+
 `export PATH=/path/to/YuchikiML_build:$PATH`
 
 4. `source ~./bashrc`
@@ -52,7 +54,7 @@ To be Described.
 #### Comment
 
 -   // .... end of line
--   (_ ... _)
+-   (* ... *)
 
 ### Semantics
 
@@ -68,7 +70,10 @@ YuchiKaml interpreter consists of YuchiKaml Preprocessor, Parser and Runner.
 
 ### Usage
 
-To be described
+`YuchikiML *Filename*`
+
+For further information, 
+`YuchikiML --help`
 
 ### Preprocess
 
