@@ -8,37 +8,24 @@ namespace expression {
     class Executor {
         public static void Execute(SourceFile sourceFile) {
             var preprocessed = Preprocessor.ProcessDirective(sourceFile);
-            Console.WriteLine("preprocessed");
+            Logger.LogInfo("preprocessed");
             var commentLess = CommentProcessor.DeleteComments(preprocessed);
-            Console.WriteLine("comment processed");
-            var program = Parse(commentLess);
-            Console.WriteLine("parsed");
+            Logger.LogInfo("comment processed");
+            var program = ExprParser.MainParser.Parse(commentLess);
+            Logger.LogInfo("parsed");
             CheckUndefinedVar(program);
-            Console.WriteLine("varable checked");
-            Console.WriteLine("ready to execute");
+            Logger.LogInfo("varable checked");
+            Logger.LogInfo("ready to execute");
             var value = program.Calculate();
-            Console.WriteLine($"Program Ended with return value: {value}");
-        }
-
-        public static Expr Parse(String commentLess) {
-            try {
-                return ExprParser.MainParser.Parse(commentLess);
-            } catch (Sprache.ParseException ex) {
-                Console.WriteLine("caught");
-                Console.WriteLine(ex.Message);
-                foreach (var item in ex.Data.Keys) {
-                    Console.WriteLine($"{item} :-> {ex.Data[item]}");
-                }
-                throw;
-            }
+            Logger.LogInfo($"Program Ended with return value: {value}");
         }
 
         public static void CheckUndefinedVar(Expr program) {
             try {
                 UndefinedVariableChecker.Check(program);
             } catch (VariableUndefinedException ex) {
-                Console.Error.WriteLine($"undefined variable {ex.Variable} detected in");
-                ex.PartialExpressions.Select(x => x + "\n---------------------------------------------").ToList().ForEach(Console.WriteLine);
+                Logger.LogError($"undefined variable {ex.Variable} detected in");
+                ex.PartialExpressions.Select(x => x + "\n---------------------------------------------").ToList().ForEach(Logger.LogError);
                 Environment.Exit(1);
             }
         }

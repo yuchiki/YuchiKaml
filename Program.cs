@@ -7,6 +7,9 @@
 
     class Program {
         static void Main(string[] arg) {
+            // TODO: Add argParser;
+            Logger.Criteria = Logger.ErrorLevel.Error;
+
             if (arg.Length == 0) {
                 Console.WriteLine("No file specified.");
                 Console.WriteLine("Tests are run.");

@@ -32,5 +32,6 @@
     <Content Include="BuiltIns.cs" />
     <Content Include="IOLibrary" />
     <Content Include="README.md" />
+    <Content Include="Logger.cs" />
   </ItemGroup>
 </Project>
