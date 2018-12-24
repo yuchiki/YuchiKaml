@@ -11,13 +11,26 @@ namespace expression {
             Console.WriteLine("preprocessed");
             var commentLess = CommentProcessor.DeleteComments(preprocessed);
             Console.WriteLine("comment processed");
-            var program = ExprParser.MainParser.Parse(commentLess);
+            var program = Parse(commentLess);
             Console.WriteLine("parsed");
             CheckUndefinedVar(program);
             Console.WriteLine("varable checked");
             Console.WriteLine("ready to execute");
             var value = program.Calculate();
             Console.WriteLine($"Program Ended with return value: {value}");
+        }
+
+        public static Expr Parse(String commentLess) {
+            try {
+                return ExprParser.MainParser.Parse(commentLess);
+            } catch (Sprache.ParseException ex) {
+                Console.WriteLine("caught");
+                Console.WriteLine(ex.Message);
+                foreach (var item in ex.Data.Keys) {
+                    Console.WriteLine($"{item} :-> {ex.Data[item]}");
+                }
+                throw;
+            }
         }
 
         public static void CheckUndefinedVar(Expr program) {

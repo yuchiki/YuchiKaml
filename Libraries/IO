@@ -3,9 +3,10 @@ let string_of_bool b = if b then "true" else "false" in
 let bool_of_string s = s == "true" in
 
 
-let print_int n = print_string (string_of_int n) in
+let print_int n = print_string (string_of_num n) in
 let print_newline _ = print_string "\n" in
 let print_endline s =
     let _ = print_string s in
     print_newline () in
-let read_int _ = int_of_string (read_line ()) in ()
+ let read_num = \_ -> num_of_string (read_line ()) in
+()
