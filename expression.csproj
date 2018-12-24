@@ -31,5 +31,6 @@
     <Content Include="SourceCode.cs" />
     <Content Include="BuiltIns.cs" />
     <Content Include="IOLibrary" />
+    <Content Include="README.md" />
   </ItemGroup>
 </Project>

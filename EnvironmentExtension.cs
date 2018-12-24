@@ -4,6 +4,7 @@ namespace expression {
 
     public static class EnvironmentExtension {
         public static Environment Update(this Environment env, string variable, Value value) =>
-            env.Remove(variable).Add(variable, value);
+            variable == "_" ? env
+            : env.Remove(variable).Add(variable, value);
     }
 }
