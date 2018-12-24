@@ -156,5 +156,12 @@ namespace expression {
             Parse.String(tokenExpression).Token().Text();
 
         private static Func<T2, T1, T3> Flip<T1, T2, T3>(this Func<T1, T2, T3> f) => (t2, t1) => f(t1, t2);
+
+        private static Expr ToObjectLevelList(IEnumerable<Expr> exprs) =>
+            exprs.Reverse().Aggregate(new CString("nil"), (Expr acc, Expr e) => new Abs("b", new If(new Var("b"), e, acc)));
+
+        private static Expr ToObjectLevelList(String str) =>
+            str.Reverse().Aggregate(new CString("nil"), (Expr acc, char c) => new Abs("b", new If(new Var("b"), new CString(c.ToString()), acc)));
+
     }
 }

@@ -4,9 +4,7 @@ let fst t = t true in
 let snd t = t false in
 
 // list definition
-(*
-we have no ADT, so using string literal "nil" for a nil tag of ADT.
-(^_^;//) *) let Nil = "nil" in
+(* We have no ADT, so using string literal "nil" for a nil tag of ADT. *) let Nil = "nil" in
 let isNil l = l == Nil in
 let Cons x xs =
     makeTuple x xs in

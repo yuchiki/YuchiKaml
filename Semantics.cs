@@ -7,10 +7,8 @@ namespace expression {
 
     public static class ExprExtensions {
         static Value Calculate(this Expr e, Environment env) {
-            //Console.WriteLine($"env:{env}");
-            //Console.WriteLine($"{e}");
+            Logger.LogTrace(e.GetType().ToString());
             var v = Calculate_(e, env);
-            //Console.WriteLine($"{e} ==> {v}");
             return v;
         }
 
@@ -85,6 +83,8 @@ namespace expression {
                                     return left.Function(right);
                                 }
                             default:
+                                Logger.LogError($"left:{app.Left}");
+                                Logger.LogError($"left:{evaluatedValue}");
                                 throw new ArgumentException();
                         }
                     }

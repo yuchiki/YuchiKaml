@@ -5,24 +5,25 @@ let isEven x = x / 2 * 2 == x in
 
 // show list pretty
 let show_list l =
-    let _ = map (\x -> print_num x; print_string " ") l in
+    let _ = map (\x -> print x; print " ") l in
     print_newline () in
 
 let main _ =
-    print_string "input num>";
+
+    print "input num>";
     let n = read_num () in
     let list = range 0 n in
     show_list list;
 
     let list = filter isEven list in
-    print_string "     evens are: ";
+    print "     evens are: ";
     show_list list;
 
     let list = map (\x -> x * x) list in
-    print_string "   squares are: ";
+    print "   squares are: ";
     show_list list;
 
-    print_string "And the sum is: ";
-    print_num (fold 0 (\x -> \y -> x + y) list);
+    print "And the sum is: ";
+    print (fold 0 (\x -> \y -> x + y) list);
     print_newline () in
 main ()
