@@ -6,7 +6,7 @@ namespace YuchikiML {
         public bool Verbose { get; set; }
 
         [Option('l', "level", Required = false, HelpText = "Designate Trace|Info|Warn|Error. Default is Error.")]
-        public Logger.ErrorLevel ErrorLevel { get; set; }
+        public Logger.ErrorLevel ErrorLevel { get; set; } = Logger.ErrorLevel.Error;
 
         [Option("test", Required = false, HelpText = "Run test")]
         public bool IsTestMode { get; set; }
