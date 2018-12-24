@@ -18,6 +18,7 @@ This interpreter is written for my personal purpose to get accustomed with Sprac
 ```sh
 cd your/working/directory
 git clone git://github.com/yuchiki/YuchiKaml.git
+cd YuchikiKaml
 make
 ```
 
