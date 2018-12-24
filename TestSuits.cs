@@ -1,4 +1,4 @@
-namespace expression {
+namespace YuchikiML {
     using System.Collections.Generic;
     using System.Linq;
     using System;
@@ -170,6 +170,6 @@ fold 0 (\x -> \y -> x + y) list";
     }
 
     static class EvalExtentionsForTest {
-        public static void Test(this Expr e, string name, Value expected) => expression.Test.TestEval(name, e, expected);
+        public static void Test(this Expr e, string name, Value expected) => YuchikiML.Test.TestEval(name, e, expected);
     }
 }

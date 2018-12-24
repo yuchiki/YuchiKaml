@@ -1,4 +1,4 @@
-namespace expression {
+namespace YuchikiML {
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.IO;
@@ -28,7 +28,6 @@ namespace expression {
             return new VUnit();
         }
 
-        // TODO: Implement it.
         private static Value CharsOfString(Value v) =>
             ((VString) v).Value.Reverse()
             .Aggregate(new CString("nil"), (Expr acc, char c) => new Abs("b", new If(new Var("b"), new CString(c.ToString()), acc)))

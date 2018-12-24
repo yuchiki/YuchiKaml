@@ -1,4 +1,4 @@
-namespace expression {
+namespace YuchikiML {
     using System;
     using Environment = System.Collections.Immutable.ImmutableDictionary<string, Value>;
 

@@ -1,4 +1,4 @@
-namespace expression {
+namespace YuchikiML {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;

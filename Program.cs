@@ -1,24 +1,39 @@
-﻿namespace expression {
+﻿namespace YuchikiML {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System;
-    using Sprache;
+    using CommandLine;
 
     class Program {
-        static void Main(string[] arg) {
+        static void Main(string[] args) {
             // TODO: Add argParser;
             Logger.Criteria = Logger.ErrorLevel.Error;
 
-            if (arg.Length == 0) {
-                Console.WriteLine("No file specified.");
-                Console.WriteLine("Tests are run.");
-                TestSuits.Test();
-                return;
-            }
-
-            var sourceFile = new SourceFile(arg[0]);
-            Executor.Execute(sourceFile);
+            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(
+                opt => {
+                    ValidateOpt(opt);
+                    Console.WriteLine(opt.ErrorLevel);
+                    Logger.Criteria = opt.ErrorLevel;
+                    if (opt.Verbose) Logger.Criteria = Logger.ErrorLevel.Trace;
+                    if (opt.IsTestMode) {
+                        TestSuits.Test();
+                        return;
+                    }
+                    Executor.Execute(new SourceFile(opt.FileName));
+                }
+            );
         }
+
+        static void ValidateOpt(CommandLineOptions opt) {
+            if (opt.FileName != null && opt.IsTestMode) {
+                Console.Error.WriteLine(" File name cannot be designated in test mode.");
+                Environment.Exit(1);
+            } else if (opt.FileName == null && !opt.IsTestMode) {
+                Console.Error.WriteLine(" File not designated.");
+                Environment.Exit(1);
+            }
+        }
+
     }
 }

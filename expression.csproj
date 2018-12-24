@@ -19,6 +19,7 @@
     <Content Include="ExprParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.3.65" />
     <PackageReference Include="Sprache" Version="2.2.0" />
     <Content Include="UndefinedChecker.cs" />
     <Content Include="UndefinedVariableChecker.cs" />
@@ -33,5 +34,6 @@
     <Content Include="IOLibrary" />
     <Content Include="README.md" />
     <Content Include="Logger.cs" />
+    <Content Include="CommandLineOptions.cs" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace expression {
+namespace YuchikiML {
     using System;
     public static class SyntaxExtentions {
         public static int Size(this Expr e) {
