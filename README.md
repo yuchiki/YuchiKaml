@@ -19,8 +19,8 @@ To be Described.
 
 #### BNF
 
--   \<expr\> 10 **:=** \<topexpr> **|** \<exprs\> **;** \<topexpr>
--   \<topexpr\> 9 **::=** \<logical_or\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\*\* <ident\> **=** \<expr\> **in** \<expr\> **|\*\* **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
+-   \<expr\> 10 **:=** \<control_expr> **|** \<exprs\> **;** \<control_expr>
+-   \<control_expr\> 9 **::=** \<logical_or\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\*\* <ident\> **=** \<expr\> **in** \<expr\> **|\*\* **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
 -   \<logical_or\> 8 **::=** \<equality\> **|** \<logical_or\> **&&** \<equality\>
 -   \<logical_and\> 7 **::=** \<equality\> **|** \<logical_and\> **&&** \<equality\>
 -   \<equality\> 6 **::=** \<relational\> **|** \<equality\> **==** \<relational\> **|** \<equality\> **!=** \<relational\>
