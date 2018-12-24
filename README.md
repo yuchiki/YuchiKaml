@@ -44,7 +44,7 @@ To be Described.
 
 ## YuchiKaml Interpreter
 
-YuchiKaml is an interpreter.
+YuchiKaml interpreter consists of YuchiKaml Preprocessor, Parser and Runner.
 
 ### Usage
 
