@@ -13,7 +13,6 @@
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed<CommandLineOptions>(
                 opt => {
                     ValidateOpt(opt);
-                    Console.WriteLine(opt.ErrorLevel);
                     Logger.Criteria = opt.ErrorLevel;
                     if (opt.Verbose) Logger.Criteria = Logger.ErrorLevel.Trace;
                     if (opt.IsTestMode) {
