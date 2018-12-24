@@ -17,7 +17,7 @@ namespace expression {
             from _ in Parse.Char('"')
         from s in Parse.CharExcept(new char[] { '"', }).Many().Text()
         from __ in Parse.Char('"')
-        select new CString(s);
+        select new CString(s.Replace("\\n", "\n"));
         private static readonly Parser<Expr> StringParser = stringParserInner.Named("string");
 
         private static Parser<Expr> intParserInner =
