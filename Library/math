@@ -3,4 +3,4 @@ let min m n = is_num m; is_num n; if m > n then n else m in
 let max m n = is_num m; is_num n; if m > n then m else n in
 let plus a b = a + b in
 let subt a b  = b - a in
-let subtfrom a b = a - b in
+let subt_from a b = a - b in
