@@ -18,17 +18,17 @@ To be Described.
 
 #### BNF
 
-- primary        0 ::=  **\<unit\>** | **\<int\>** | **\<bool\>** | **\<ident\>** | (**\<expr\>**)
-- app            1 ::= **\<primary\>** | **\<app\>** **\<primary\>**
-- unary          2 ::= **\<app\>** | !**\<unary\>**
-- multiplicative 3 ::= **\<unary\>** | **\<multiplicative\>** * **\<unary\>** | **\<multiplicative\>** / **\<unary\>**
-- additive       4 ::= **\<unary\>** | **\<additive\>** + **\<unary\>** | **\<additive\>** - **\<unary\>**
-- relational     5 ::= **\<additive\>** | **\<relational\>** <= **\<additive\>** | **\<relational\>** < **\<additive\>** | **<relational\>** >= **\<additive\>** | **\<relational\>** > **\<additive\>** |
-- equality       6 ::= **\<relational\>** | **\<equality\>** == **\<relational\>** | **\<equality\>** != **\<relational\>**
-- logical_and    7 ::= **\<equality\>** | **\<logical_and\>** && **\<equality\>**
-- logical_or     8 ::= **\<equality\>** | **\<logical_or\>** && **\<equality\>**
-- topexpr        9 ::= **\<logical_or\>** | if **\<expr\>** then **\<expr\>** else **\<expr\>** | let rec **\<ident\>** \ **<ident\>** = **\<expr\>** in **\<expr\>** | let **\<ident\>** = **\<expr\>** in **\<expr\>** | \ **\<ident\>** -> **\<expr\>**
-  
+- \<topexpr\>        9 **::=** \<logical_or\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\** <ident\> **=** \<expr\> **in** \<expr\> **|** **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
+- \<logical_or\>     8 **::=** \<equality\> **|** \<logical_or\> **&&** \<equality\>
+- \<logical_and\>    7 **::=** \<equality\> **|** \<logical_and\> **&&** \<equality\>
+- \<equality\>       6 **::=** \<relational\> **|** \<equality\> **==** \<relational\> **|** \<equality\> **!=** \<relational\>
+- \<relational\>     5 **::=** \<additive\> **|** \<relational\> **<=** \<additive\> **|** \<relational\> **<** \<additive\> **|** <relational\> **>=** \<additive\> **|** \<relational\> **>** \<additive\> 
+- \<additive\>       4 **::=** \<unary\> **|** \<additive\> **+** \<unary\> **|** \<additive\> **-** \<unary\>
+- \<multiplicative\> 3 **::=** \<unary\> **|** \<multiplicative\> **\*** \<unary\> **|** \<multiplicative\> **/** \<unary\>
+- \<unary\>          2 **::=** \<app\> **|** **!**\<unary\>
+- \<app\>            1 **::=** \<primary\> **|** \<app\> *<primary\>
+- \<primary\>        0 **::=** \<unit\> **|** \<int\> **|** \<bool\> **|** \<ident\> **|** **(**\<expr\>**)**
+
 #### Comment
 
 - // .... end of line
