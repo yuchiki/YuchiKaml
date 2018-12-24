@@ -3,8 +3,20 @@
 
 // main
 let isEven x = x / 2 * 2 == x in
-let list = range 0 10 in
-let _ = map (\x -> let _ = print_int x in print_string " ") list in
+let show_list l =
+    let _ = map (\x -> let _ = print_num x in print_string " ") l in
+    print_newline () in
+
+let _ = print_string "input num>" in
+let n = read_num () in
+let list = range 0 n in
+let _ = show_list list in
 let list = filter isEven list in
+let _ = print_string "evens are: " in
+let _ = show_list list in
 let list = map (\x -> x * x) list in
-fold 0 (\x -> \y -> x + y) list
+let _ = print_string "squares are: " in
+let _ = show_list list in
+let _ = print_string "And the sum is: " in
+let _ = print_num (fold 0 (\x -> \y -> x + y) list) in
+()

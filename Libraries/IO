@@ -9,4 +9,3 @@ let print_endline s =
     let _ = print_string s in
     print_newline () in
  let read_num = \_ -> num_of_string (read_line ()) in
-()
