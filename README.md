@@ -13,7 +13,7 @@ This interpreter is written for my personal purpose to get accustomed with Sprac
 
 1. install dotnet command following an [install instruction of dotnet command](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial)
 
-2. clone this repositotry and do `make` in the directory.
+2. clone this repository and do `make` in the directory.
 
 ```sh
 cd your/working/directory
@@ -28,7 +28,6 @@ make
 
 4. `source ~./bashrc`
 
-
 ## YuchiKaml Language
 
 I define and explain YuchiKaml Language.
@@ -39,22 +38,23 @@ To be Described.
 
 #### BNF
 
--   \<expr\> 10 **:=** \<control_expr> **|** \<exprs\> **;** \<control_expr>
--   \<control_expr\> 9 **::=** \<logical_or\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\*\* <ident\> **=** \<expr\> **in** \<expr\> **|\*\* **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
--   \<logical_or\> 8 **::=** \<equality\> **|** \<logical_or\> **&&** \<equality\>
--   \<logical_and\> 7 **::=** \<equality\> **|** \<logical_and\> **&&** \<equality\>
--   \<equality\> 6 **::=** \<relational\> **|** \<equality\> **==** \<relational\> **|** \<equality\> **!=** \<relational\>
--   \<relational\> 5 **::=** \<additive\> **|** \<relational\> **<=** \<additive\> **|** \<relational\> **<** \<additive\> **|** <relational\> **>=** \<additive\> **|** \<relational\> **>** \<additive\>
--   \<additive\> 4 **::=** \<unary\> **|** \<additive\> **+** \<unary\> **|** \<additive\> **-** \<unary\>
--   \<multiplicative\> 3 **::=** \<unary\> **|** \<multiplicative\> **\*** \<unary\> **|** \<multiplicative\> **/** \<unary\>
--   \<unary\> 2 **::=** \<app\> **|** **!**\<unary\>
--   \<app\> 1 **::=** \<primary\> **|** \<app\> \*<primary\>
+-   \<expr\> **:=** \<control_expr> **|** \<exprs\> **;** \<control_expr>
+-   \<control_expr\> **::=** \<pipe\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\*\* <ident\> **=** \<expr\> **in** \<expr\> **|\*\* **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
+-   \<pipe\> **::=** \<logical_or\> **|** \<pipe\> **|>** \<logical_or\> **|** \<pipe\> **>>** \<logical_or\>
+-   \<logical_or\> **::=** \<equality\> **|** \<logical_or\> **&&** \<equality\>
+-   \<logical_and\> **::=** \<equality\> **|** \<logical_and\> **&&** \<equality\>
+-   \<equality\> **::=** \<relational\> **|** \<equality\> **==** \<relational\> **|** \<equality\> **!=** \<relational\>
+-   \<relational\> **::=** \<additive\> **|** \<relational\> **<=** \<additive\> **|** \<relational\> **<** \<additive\> **|** <relational\> **>=** \<additive\> **|** \<relational\> **>** \<additive\>
+-   \<additive\> **::=** \<unary\> **|** \<additive\> **+** \<unary\> **|** \<additive\> **-** \<unary\>
+-   \<multiplicative\> **::=** \<unary\> **|** \<multiplicative\> **\*** \<unary\> **|** \<multiplicative\> **/** \<unary\>
+-   \<unary\> **::=** \<app\> **|** **!**\<unary\>
+-   \<app\> **::=** \<primary\> **|** \<app\> \*<primary\>
 -   \<primary\> 0 **::=** \<unit\> **|** \<int\> **|** \<bool\> **|** \<ident\> **|** **(**\<expr\>**)**
 
 #### Comment
 
 -   // .... end of line
--   (* ... *)
+-   (_ ... _)
 
 ### Semantics
 
@@ -72,7 +72,7 @@ YuchiKaml interpreter consists of YuchiKaml Preprocessor, Parser and Runner.
 
 `YuchikiML *Filename*`
 
-For further information, 
+For further information,
 `YuchikiML --help`
 
 ### Preprocess

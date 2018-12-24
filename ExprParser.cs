@@ -74,6 +74,10 @@ namespace YuchikiML {
                 },
                 new(string, OperatorCreator) [] {
                     ("||", Expr.Or)
+                },
+                new(string, OperatorCreator) [] {
+                    ("|>", (left, right) => Expr.App(right, left)),
+                    (">>", (left, right) => Expr.Abs("x", Expr.App(right, Expr.App(left, Expr.Var("x")))))
                 }
             }).Named("BinaryOperators");
 

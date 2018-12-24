@@ -41,9 +41,11 @@ let rec range minValue maxValue =
     else Cons minValue (range (minValue + 1) maxValue) in
 
 let rec take n l =
+    is_num n;
     if n == 0 then "nil"
     else Cons (fst l) (take (n-1) (snd l)) in
 let rec drop n l =
+    is_num n;
     if n == 0 then l
     else drop (n-1) (snd l) in
 let nth n l = fst (drop n l) in
