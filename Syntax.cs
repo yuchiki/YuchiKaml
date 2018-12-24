@@ -3,14 +3,8 @@ namespace expression {
     using System.Linq;
 
     /*
-        expression e ::= n | s | x | e + e | e * e | e - e | e / e | let x1 ... xn = e in e | \x -> e | e e
-            | b | e && e | e || e | !e
-            | e == e | e != e | e <= e | e < e | e >= e | e > e
-            | if e then e else e
-            | let rec f x = e in e
-
         // I restrict mu in the function form , that is, of in the form let rec f x = e in e.
-        // Because Only in closure are unevaluated values allowed to be.
+        // Because only in closure are unevaluated values allowed to be.
      */
 
     public abstract class Expr {

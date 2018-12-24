@@ -55,7 +55,7 @@ namespace expression {
         select Times(negSequence.Count(), Expr.Not, app);
         private static readonly Parser<Expr> UnaryParser = unaryParserInner.Named("unary");
 
-        private static readonly Parser<Expr> LogicalOrParser =
+        private static readonly Parser<Expr> BinaryOperatorsParser =
             BinOpParser(UnaryParser, new(string, OperatorCreator) [][] {
                 new(string, OperatorCreator) [] {
                     ("*", Expr.Mul), ("/", Expr.Div)
@@ -74,8 +74,8 @@ namespace expression {
                 },
                 new(string, OperatorCreator) [] {
                     ("||", Expr.Or)
-                },
-            }).Named("Logical Or");
+                }
+            }).Named("BinaryOperators");
 
         private static readonly Parser<Expr> ifParserInner =
             from _ in "if".ToToken()
@@ -120,9 +120,16 @@ namespace expression {
         private static readonly Parser<Expr> AbsParser = absParserInner.Named("let");
 
         private static readonly Parser<Expr> TopExprParser =
-            OrParser(IfParser, LetRecParser, LetParser, AbsParser, LogicalOrParser).Named("top");
+            OrParser(IfParser, LetRecParser, LetParser, AbsParser, BinaryOperatorsParser).Named("top");
 
-        public static readonly Parser<Expr> MainParser = TopExprParser;
+        private static readonly Parser<Expr> SemiColonParser =
+            BinOpParser(TopExprParser, new(string, OperatorCreator) [][] {
+                new(string, OperatorCreator) [] {
+                    (";", (l, r) => new Bind("_", l, r))
+                }
+            }).Named("SemiColonParser");
+
+        public static readonly Parser<Expr> MainParser = SemiColonParser;
 
         /* Followings are helper functions */
 
@@ -151,17 +158,3 @@ namespace expression {
         private static Func<T2, T1, T3> Flip<T1, T2, T3>(this Func<T1, T2, T3> f) => (t2, t1) => f(t1, t2);
     }
 }
-
-/*
-
-        primary 0 ::=  <unit> | <int> | <bool> | <ident> | (<expr>)
-        app 1::= <primary> | <app> <primary>
-        unary 2 ::= <app> | !<app> |
-        multiplicative 3::= <unary> | <multiplicative> * <unary> | <multiplicative> / <unary>
-        additive 4::= <unary> | <additive> + <unary> | <additive> - <unary>
-        relational 5::=  <additive> | <relational> <= <additive> | <relational> < <additive> | <relational> >= <additive> | <relational> > <additive> |
-        equality 6::= <relational> | <equality> == <relational> | <equality> != <relational>
-        logical_and 7::= <equality> | <logical_and> && <equality>
-        logical_or 8::= <equality> | <logical_or> && <equality>
-        topexpr 9::= <logical_or> | if <expr> then <expr> else <expr> | let rec <ident> <ident> = <expr> in <expr> | let <ident> = <expr> in <expr> | \ <ident> -> <expr>
- */

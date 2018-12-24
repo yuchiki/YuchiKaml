@@ -8,17 +8,20 @@ let show_list l =
     print_newline () in
 
 let main _ =
-    let _ = print_string "input num>" in
+    print_string "input num>";
     let n = read_num () in
     let list = range 0 n in
-    let _ = show_list list in
+    show_list list;
+
     let list = filter isEven list in
-    let _ = print_string "evens are: " in
-    let _ = show_list list in
+    print_string "evens are: ";
+    show_list list;
+
     let list = map (\x -> x * x) list in
-    let _ = print_string "squares are: " in
-    let _ = show_list list in
-    let _ = print_string "And the sum is: " in
-    let _ = print_num (fold 0 (\x -> \y -> x + y) list) in
+    print_string "squares are: ";
+    show_list list;
+
+    print_string "And the sum is: ";
+    print_num (fold 0 (\x -> \y -> x + y) list);
     print_newline () in
 main ()
