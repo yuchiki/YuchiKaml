@@ -15,8 +15,8 @@ namespace expression {
                 new BuiltInFunctionPair("read_char", ReadChar),
                     new BuiltInFunctionPair("read_line", ReadLine),
                     new BuiltInFunctionPair("print_string", PutString),
-                    new BuiltInFunctionPair("int_of_string", IntOfString),
-                    new BuiltInFunctionPair("string_of_int", StringOfInt)
+                    new BuiltInFunctionPair("num_of_string", IntOfString),
+                    new BuiltInFunctionPair("string_of_num", StringOfInt)
             }.ToImmutableDictionary();
 
         private static Value ReadChar(Value _) => new VString(((char) Console.Read()).ToString());
