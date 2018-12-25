@@ -1,5 +1,8 @@
 
 \subsection{Syntax}
+In this section, we define the syntax of YuchikiML.
+
+\subsubsection{Expression}
 
 \emph{Expressions} of YuchiKaml are defined by the following BNF equations:
 
@@ -20,20 +23,6 @@
 The operators defined in earlier rows have stronger precedences than the operators defined in later rows.
 For example, $1 + 2 * 3$ is not parsed as $(1 + 2) * 3$, but $1 + ( 2 * 3)$.
 
-In real source codes, the symbols above are notated as follows:
-
-\begin{align*}
-    &\leq & <=\\
-    &\geq & >=\\
-    &\not= & !=\\
-    &\logAnd & \&\&\\
-    &\logOr & ||\\
-    &\triangleright & |>\\
-    &\composition & >>\\
-    &\abs{x}{e} & \backslash x -> e
-\end{align*}
-
-
 \begin{example}[GCD]
     This is an example of a YuchiKaml source code of a program which calculates the greatest common divisor of 120 and 45.
 
@@ -52,4 +41,21 @@ We show the list and syntax sugars and how they are desugared.
         \letRecStructure{f}{a\ b_{1} \cdots b_n}{e_1}{e_2}&\defeq
             \letRecStructure{f}{a}{\lambda b_1 . \cdots \lambda b_n.\ {e_1}}{e_2}\\
         e_1\opCol{}e_2 &\defeq \letStructure{\_}{e_1}{e_2}
+\end{align*}
+
+The semantics of expressions, introduced in a later section, is defined for desugared expressions.
+
+\subsubsection{real notation}
+
+In real source codes, the symbols above are notated as follows:
+
+\begin{align*}
+    &\leq & <=\\
+    &\geq & >=\\
+    &\not= & !=\\
+    &\logAnd & \&\&\\
+    &\logOr & ||\\
+    &\triangleright & |>\\
+    &\composition & >>\\
+    &\abs{x}{e} & \backslash x -> e
 \end{align*}

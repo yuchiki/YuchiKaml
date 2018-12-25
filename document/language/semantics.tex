@@ -1,27 +1,43 @@
 
 \subsection{Semantics}
 
-Then we define the semantics of the expressions.
+Then we define the semantics of expressions.
+We assume that the behaviour of built-in functions are given.
+That is, built-in functions is a deterministic.
 
 \subsubsection{Value}
-\emph{Values} of YuchiKaml is listed as below:
+\emph{Values} of expressions are listed as below:
 
 \begin{align*}
     v (\text{value}) &\defeq n \mid b \mid  s \mid  \closure \mid  \builtinFunction\\
     \valuation  (\text{valuation}) &\in \variables \not\to\values \\
-    \builtinFunction{} (\text{built-in function})&\in \values\not\to\values\\
-    \closure (\text{closure}) &\defeq (x,e,\valuation{})
+    \builtinFunction{} (\text{built-in function})&\in \History \times\values\not\to\values\\
+    \closure (\text{closure}) &\defeq (x,e,\valuation{})\\
+    h (\text{history}) &\defeq \seq{(f_1, v_1); \cdots; (f_n, v_n)}
 \end{align*}
+
+
 
 Here $\variables$ is the set of the variables and $\values$ is the set of the values.
 
-\subsubsection{Evaluation}
-We define the \emph{evaluation} process of expression by a big-step semantics shown below.
+\begin{note}
+We assume that all the built-in functions are at least function.
+It means, all the built-in functions return the same value for the same input, if it does not diverge.
+This is not a correct assumption. for example, Random function and Read function may return variable values.
+the aim of this assumption is to define the possible implementations of processing systems.
+that is, intuitionally, to judge the processing system OK if it works as the same as the expected behaviour under this assumption.
+\end{note}
+
+\subsubsection{Small-Step Evaluation}
+We have to define the behaviour of evaluation process of expressions clearly.
+To this end, we define the \emph{evaluation} process of expression by a big-step semantics shown below.
 
 An \emph{evaluation relation} is a four-term relation of the form $\evalRel{\valuation}{e_1}{e_2}$.
 
 The evaluation rules of YuchiKaml are shown below:
 
+
+\todo{modify totally. count Histories}
 \infrule[E-Var]
 {\valuation(x) = v}
 {\evalRel{\valuation}{x}{v}}
@@ -136,3 +152,11 @@ The evaluation rules of YuchiKaml are shown below:
 \infrule[E-Abs]
 {}
 {\evalRel{\valuation}{\abs{x}{e}}{(x, e, \valuation)}}
+
+Using this small-step evaluation relation, we define the next big-step evaluation relation.
+
+\begin{note}
+    For any expression $e_1$, if $\valuation$, $e_2$ and $e_3$ satisfy $\evalRel{\valuation}{e_1}{e_2}$ and $\evalRel{\valuation}{e_1}{e_3}$, then $e_2 = e_3$.
+\end{note}
+
+\subsubsection{Big-Step Evaluation}
