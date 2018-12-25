@@ -4,8 +4,11 @@
 \newcommand\bnf[1]{\langle\text{#1}\rangle}
 \DeclareMathOperator\defeq{::=}
 
+%generic definiiton
+\newcommand\set[1]{\left\{#1\right\}}
+\newcommand\setc[2]{\left\{#1 \mid #2\right\}}
 
-%tokens
+%syntactic tokens
 \DeclareMathOperator\letToken{\text{let}}
 \DeclareMathOperator\recToken{\text{rec}}
 \DeclareMathOperator\inToken{\text{in}}
@@ -18,6 +21,22 @@
 \DeclareMathOperator\logOr{\,|\!\!\!|\,}
 \DeclareMathOperator\logNot{!}
 
+%semantic tokens
+\DeclareMathOperator\VInt{\text{VInt}}
+\DeclareMathOperator\VBool{\text{VBool}}
+\DeclareMathOperator\VString{\text{VString}}
+\DeclareMathOperator\VClosure{\text{VClos}}
+\DeclareMathOperator\VBuiltInClosure{\text{VBClos}}
+
+%symbolLetters
+\newcommand\env{\Gamma}
+\newcommand\builtinFunction{f_b}
+\newcommand\variables{\text{Var}}
+\newcommand\values{\text{Val}}
+
 %operators
 %\DeclareMathOperator\pipe{\triangleright}
 \newcommand\composition{>\!\!>}
+
+%typejudgment
+\newcommand\hasType[2]{|- #1 : #2}

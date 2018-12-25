@@ -1,1 +1,15 @@
 \subsection{Semantics}
+
+Then we define the semantics of the expressions.
+
+\subsubsection{Value}
+\emph{Values} of YuchiKaml is listed as below:
+
+\begin{align*}
+    v (\text{value}) &\defeq \VInt n | \VBool b | \VString s | \VClosure (x, e, \Gamma) | \VBuiltInClosure \builtinFunction{}\\
+    \env  (\text{environment}) &\in \variables \not\to\values \\
+    \builtinFunction{} (\text{built-in function})&\in \values\not\to\values
+\end{align*}
+
+Here $\variables$ is the set of the variables and $\values$ is the set of the values.
+\subsubsection{}
