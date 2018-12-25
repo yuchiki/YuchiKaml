@@ -35,12 +35,17 @@ The evaluation rules of YuchiKaml are shown below:
 {\evalRel{\valuation}{v_1\ e_2}{v_1'\ e_2'}}
 
 \infrule[E-AppCls]
-{}{}
+{\evalRel{\valuation'\cup\set{x\mapsto v}}{e_1}{e_1'}}
+{\evalRel{\valuation}{(x, e_1, \valuation')\ v_2 }{(x, e_1', \valuation') v_2}}
 
-\todo{define it.}
+
+\infrule[E-AppCls2]
+{}
+{\evalRel{\valuation}{(x, v_1, \valuation')\ v_2 }{v_1}}
+
 
 \infrule[E-AppBuiltIn]
-{}{}
+{f_1@v_2 = v_3 }{\evalRel{\valuation}{f_1\ v_2}{v_3}}
 
 
 \infrule[E-BinOp-Left]
