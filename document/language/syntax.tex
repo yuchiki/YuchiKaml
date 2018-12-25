@@ -13,7 +13,7 @@
                 &\mid e \logAnd e\\
                 &\mid e \logOr e\\
                 &\mid e \triangleright e \mid e \composition e\\
-                &\mid \ifToken e \thenToken e \elseToken e \mid \letToken x\ \tilde{a} = e \inToken e \mid \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e\mid \abs{x}{e}\\
+                &\mid \ifStructure{e}{e}{e} \mid \letStructure{x\ \tilde{a}}{e}{e} \mid \letRecStructure{f}{a_1\ \tilde{a}}{e}{e} \mid \abs{x}{e}\\
                 &\mid e\opCol{}e
 \end{align*}
 
@@ -41,5 +41,15 @@ In real source codes, the symbols above are notated as follows:
 \end{example}
 
 \subsubsection{Syntax Sugar}
+Some of the expressions shown above are syntactic sugars.
+We show the list and syntax sugars and how they are desugared.
+
+\begin{align*}
+        e_1 \triangleright e_2 & \\
+        e_1 \composition e_2 &\\
+        \letToken x\ \tilde{a} = e \inToken e&
+        \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e&
+        e\opCol{}e &=
+\end{align*}
 
 \todo{explain it.}

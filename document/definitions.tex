@@ -27,6 +27,12 @@
 \DeclareMathOperator\opCol{;}
 \newcommand\abs[2]{\lambda #1.\ #2}
 
+%structures
+\newcommand\ifStructure[3]{\ifToken #1 \thenToken #2 \elseToken #3}
+\newcommand\letStructure[3]{\letToken #1 = #2 \inToken #3}
+\newcommand\letRecStructure[4]{\letToken \recToken #1\ #2 = #3 \inToken #4}
+
+
 %semantic tokens
 \DeclareMathOperator\VInt{\text{VInt}}
 \DeclareMathOperator\VBool{\text{VBool}}
