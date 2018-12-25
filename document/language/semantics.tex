@@ -1,3 +1,4 @@
+
 \subsection{Semantics}
 
 Then we define the semantics of the expressions.
@@ -6,10 +7,127 @@ Then we define the semantics of the expressions.
 \emph{Values} of YuchiKaml is listed as below:
 
 \begin{align*}
-    v (\text{value}) &\defeq \VInt n | \VBool b | \VString s | \VClosure (x, e, \Gamma) | \VBuiltInClosure \builtinFunction{}\\
-    \env  (\text{environment}) &\in \variables \not\to\values \\
-    \builtinFunction{} (\text{built-in function})&\in \values\not\to\values
+    v (\text{value}) &\defeq n \mid b \mid  s \mid  \closure \mid  \builtinFunction\\
+    \valuation  (\text{valuation}) &\in \variables \not\to\values \\
+    \builtinFunction{} (\text{built-in function})&\in \values\not\to\values\\
+    \closure (\text{closure}) &\defeq (x,e,\valuation{})
 \end{align*}
 
 Here $\variables$ is the set of the variables and $\values$ is the set of the values.
-\subsubsection{}
+
+\subsubsection{Evaluation}
+We define the \emph{evaluation} process of expression by a big-step semantics shown below.
+
+An \emph{evaluation relation} is a four-term relation of the form $\evalRel{\valuation}{e_1}{e_2}$.
+
+The evaluation rules of YuchiKaml are shown below:
+
+\infrule[E-Var]
+{\valuation(x) = v}
+{\evalRel{\valuation}{x}{v}}
+
+\infrule[E-AppLeft]
+{\evalRel{\valuation}{e_1}{e_1'}}
+{\evalRel{\valuation}{e_1\ e_2}{e_1'\ e_2}}
+
+\infrule[E-AppRight]
+{\evalRel{\valuation}{e_2}{e_2'}}
+{\evalRel{\valuation}{v_1\ e_2}{v_1'\ e_2'}}
+
+\infrule[E-AppCls]
+{}{}
+
+\todo{define it.}
+
+\infrule[E-AppBuiltIn]
+{}{}
+
+
+\infrule[E-BinOp-Left]
+{\evalRel{\valuation}{e_1}{e_1'}}
+{\evalRel{\valuation}{e_1 \binOp e_2}{e_1' \binOp e_2}}
+
+
+\infrule[E-BinOp-Right]
+{\evalRel{\valuation}{e_2}{e_2'}}
+{\evalRel{\valuation}{v_1 \binOp e_2}{v_1 \binOp e_2'}}
+
+
+\infrule[E-Mul]
+{n_1 \interp{*} n_2 = n_3}
+{\evalRel{\valuation}{n_1 * n_2}{n_3 }}
+\infrule[E-Div]
+{n_1 \interp{/}n_2 = n_3}
+{\evalRel{\valuation}{n_1 / n_2}{n_3 }}
+
+\infrule[E-Plus]
+{n_1 \interp{+} n_2 = n_3}
+{\evalRel{\valuation}{n_1 + n_2}{n_3 }}
+\infrule[E-Minus]
+{n_1 \interp{-} n_2 = n_3}
+{\evalRel{\valuation}{n_1 - n_2}{n_3 }}
+
+\infrule[E-Leq]
+{n_1 \interp{\leq} n_2 = b_3}
+{\evalRel{\valuation}{n_1 \leq n_2}{b_3 }}
+\infrule[E-Lt]
+{n_1 \interp{<} n_2 = b_3}
+{\evalRel{\valuation}{n_1 < n_2}{b_3 }}
+\infrule[E-Geq]
+{n_1  \interp{\geq} n_2 = b_3}
+{\evalRel{\valuation}{n_1 \geq n_2}{b_3 }}
+\infrule[E-Gt]
+{n_1 \interp{>} n_2 = b_3}
+{\evalRel{\valuation}{n_1 > n_2}{b_3 }}
+
+
+\infrule[E-And]
+{b_1 \interp{\logAnd} b_2 = b_3}
+{\evalRel{\valuation}{b_1 \logAnd{} b_2}{b_3 }}
+\infrule[E-Or]
+{b_1 \interp{\logOr} b_2 = b_3}
+{\evalRel{\valuation}{b_1 \logOr{} b_2}{b_3 }}
+
+
+\infrule[E-Eq]
+{(v_1 = v_2) = b_3}
+{\evalRel{\valuation}{v_1 = v_2}{ b_3}}
+\infrule[E-Neq]
+{(v_1 \not= v_2) = b_3}
+{\evalRel{\valuation}{v_1 \not= v_2}{ b_3}}
+
+\infrule[E-IFCond]
+{\evalRel{\valuation}{e_1}{e_1'}}
+{\evalRel{\valuation}{\ifToken e_1 \thenToken e_2 \elseToken e_3}{\ifToken e_1' \thenToken e_2 \elseToken e_3}}
+
+
+\infrule[E-IfTrue]
+{}
+{\evalRel{\valuation}{\ifToken \trueToken \thenToken e_2 \elseToken e_3}{ e_2}}
+
+\infrule[E-IfFalse]
+{}
+{\evalRel{\valuation}{\ifToken \trueToken \thenToken e_2 \elseToken e_3}{ e_3}}
+
+\infrule[E-LetBody]
+{\evalRel{\valuation}{e_1}{e_1'}}
+{\evalRel{\valuation}{\letToken x = e_1\in e_2 }{\letToken x = e_1'\inToken e_2 }}
+
+\infrule[E-LetRem]
+{\evalRel{\valuation\cup \set{x \mapsto v_1}}{e_2}{e_2'}}
+{\evalRel{\valuation}{\letToken x = v_1\inToken e_2 }{\letToken x = v_1\inToken e_2' }}
+
+\infrule[E-LetValue]
+{}
+{\evalRel{\valuation}{\letToken x = v_1\inToken v_2 }{v_2}}
+
+
+\infrule[E-LetRec]
+{}
+{}
+\todo{ define it.}
+
+
+\infrule[E-Abs]
+{}
+{\evalRel{\valuation}{\abs{x}{e}}{(x, e, \valuation)}}

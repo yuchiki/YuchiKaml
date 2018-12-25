@@ -1,3 +1,4 @@
+
 \subsection{Syntax}
 
 \emph{Expressions} of YuchiKaml are defined by the following BNF equations:
@@ -12,7 +13,8 @@
                 &\mid e \logAnd e\\
                 &\mid e \logOr e\\
                 &\mid e \triangleright e \mid e \composition e\\
-                &\mid \ifToken e \thenToken e \elseToken e \mid \letToken (\recToken) x\ \tilde{a} = e \inToken e \mid \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e\mid \lambda x \rightarrow e
+                &\mid \ifToken e \thenToken e \elseToken e \mid \letToken x\ \tilde{a} = e \inToken e \mid \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e\mid \abs{x}{e}\\
+                &\mid e\opCol{}e
 \end{align*}
 
 The operators defined in earlier rows have stronger precedences than the operators defined in later rows.
@@ -28,6 +30,16 @@ In real source codes, the symbols above are notated as follows:
     &\logOr & ||\\
     &\triangleright & |>\\
     &\composition & >>\\
-    &\lambda & \backslash\\
-    &\rightarrow & ->
+    &\abs{x}{e} & \backslash x -> e
 \end{align*}
+
+
+\begin{example}[GCD]
+    This is an example of a YuchiKaml source code of a program which calculates the greatest common divisor of 120 and 45.
+
+    \lstinputlisting[caption=Samples/gcd, language=ML]{../Samples/gcd}
+\end{example}
+
+\subsubsection{Syntax Sugar}
+
+\todo{explain it.}

@@ -2,13 +2,17 @@
 
 \newcommand{\cs}{C\#}
 \newcommand\bnf[1]{\langle\text{#1}\rangle}
-\DeclareMathOperator\defeq{::=}
+\DeclareMathOperator\defeq{:\!:=}
 
-%generic definiiton
+%generic definition
+\newcommand\todo[1]{\textbf{\textcolor{red}{TODO: #1}}}
 \newcommand\set[1]{\left\{#1\right\}}
 \newcommand\setc[2]{\left\{#1 \mid #2\right\}}
+\newcommand\interp[1]{\,[\![#1]\!]\,}
 
 %syntactic tokens
+
+\DeclareMathOperator\binOp{\text{op}}
 \DeclareMathOperator\letToken{\text{let}}
 \DeclareMathOperator\recToken{\text{rec}}
 \DeclareMathOperator\inToken{\text{in}}
@@ -20,6 +24,8 @@
 \DeclareMathOperator\logAnd{\&\!\!\!\&}
 \DeclareMathOperator\logOr{\,|\!\!\!|\,}
 \DeclareMathOperator\logNot{!}
+\DeclareMathOperator\opCol{;}
+\newcommand\abs[2]{\lambda #1.\ #2}
 
 %semantic tokens
 \DeclareMathOperator\VInt{\text{VInt}}
@@ -29,8 +35,9 @@
 \DeclareMathOperator\VBuiltInClosure{\text{VBClos}}
 
 %symbolLetters
-\newcommand\env{\Gamma}
+\newcommand\valuation{\rho}
 \newcommand\builtinFunction{f_b}
+\newcommand\closure{\text{cl}}
 \newcommand\variables{\text{Var}}
 \newcommand\values{\text{Val}}
 
@@ -38,5 +45,7 @@
 %\DeclareMathOperator\pipe{\triangleright}
 \newcommand\composition{>\!\!>}
 
-%typejudgment
+%type judgment
 \newcommand\hasType[2]{|- #1 : #2}
+
+\newcommand\evalRel[3]{#1 \vdash  #2 \longrightarrow #3 }

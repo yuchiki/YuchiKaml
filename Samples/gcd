@@ -1,5 +1,5 @@
 let rec gcd m n =
-    if m > n then gcd (m-n) n
-    else if m < n then gcd m (n-m)
+    if m > n then gcd (m - n) n
+    else if m < n then gcd m (n - m)
     else m
 in gcd 120 45
