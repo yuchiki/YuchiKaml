@@ -45,11 +45,11 @@ Some of the expressions shown above are syntactic sugars.
 We show the list and syntax sugars and how they are desugared.
 
 \begin{align*}
-        e_1 \triangleright e_2 & \\
-        e_1 \composition e_2 &\\
-        \letToken x\ \tilde{a} = e \inToken e&
-        \letToken \recToken x\ a_1\ \tilde{a} = e \inToken e&
-        e\opCol{}e &=
+        e_1 \triangleright e_2 &\defeq e_2\ e_1 \\
+        e_1 \composition e_2 &\defeq \abs{x}{g (f x)}\\
+        \letStructure{f\ a_{1} \cdots a_n}{e_1}{e_2}&\defeq
+            \letStructure{f}{\lambda a_1 . \cdots \lambda a_n.\ {e_1}}{e_2}\\
+        \letRecStructure{f}{a\ b_{1} \cdots b_n}{e_1}{e_2}&\defeq
+            \letRecStructure{f}{a}{\lambda b_1 . \cdots \lambda b_n.\ {e_1}}{e_2}\\
+        e_1\opCol{}e_2 &\defeq \letStructure{\_}{e_1}{e_2}
 \end{align*}
-
-\todo{explain it.}
