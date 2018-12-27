@@ -27,39 +27,14 @@ make
 
 ## YuchiKaml Language
 
-I define and explain YuchiKaml Language.
+YuchiKaml is a dynamic-typed langauge with ML-like surface grammar.
 
-### Syntax
-
-To be Described.
-
-#### BNF
-
--   \<expr\> **:=** \<control_expr> **|** \<exprs\> **;** \<control_expr>
--   \<control_expr\> **::=** \<pipe\> **|** **if** \<expr\> **then** \<expr\> **else** \<expr\> **|** **let** **rec** \<ident\> **\*\* <ident\> **=** \<expr\> **in** \<expr\> **|\*\* **let** \<ident\> **=** \<expr\> **in** \<expr\> **|** **\\** \<ident\> **->** \<expr\>
--   \<pipe\> **::=** \<logical_or\> **|** \<pipe\> **|>** \<logical_or\> **|** \<pipe\> **>>** \<logical_or\>
--   \<logical_or\> **::=** \<equality\> **|** \<logical_or\> **&&** \<equality\>
--   \<logical_and\> **::=** \<equality\> **|** \<logical_and\> **&&** \<equality\>
--   \<equality\> **::=** \<relational\> **|** \<equality\> **==** \<relational\> **|** \<equality\> **!=** \<relational\>
--   \<relational\> **::=** \<additive\> **|** \<relational\> **<=** \<additive\> **|** \<relational\> **<** \<additive\> **|** <relational\> **>=** \<additive\> **|** \<relational\> **>** \<additive\>
--   \<additive\> **::=** \<unary\> **|** \<additive\> **+** \<unary\> **|** \<additive\> **-** \<unary\>
--   \<multiplicative\> **::=** \<unary\> **|** \<multiplicative\> **\*** \<unary\> **|** \<multiplicative\> **/** \<unary\>
--   \<unary\> **::=** \<app\> **|** **!**\<unary\>
--   \<app\> **::=** \<primary\> **|** \<app\> \*<primary\>
--   \<primary\> **::=** \<unit\> **|** \<int\> **|** \<bool\> **|** \<ident\> **|** **(**\<expr\>**)**
+See [GCD example](https://github.com/yuchiki/YuchiKaml/blob/master/Samples/gcd) and the  [document](https://github.com/yuchiki/YuchiKaml_Document/blob/master/document.pdf).
 
 #### Comment
 
 -   // .... end of line
--   (_ ... _)
-
-### Semantics
-
-To be Described.
-
-### Note
-
-To be Described.
+-   (\* ... \*)
 
 ## YuchiKaml Interpreter
 
