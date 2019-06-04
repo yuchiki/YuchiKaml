@@ -42,6 +42,10 @@
     <Content Include="Samples\ABC114B" />
     <Content Include="Library\math" />
     <Content Include="Library\ath" />
+    <Content Include="Typing.cs" />
+    <Content Include="Comment.cs" />
+    <Content Include="TypeChecker.cs" />
+    <Content Include="Type.cs" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Copy SourceFiles="@(_LibraryFiles)" DestinationFolder="./Out/$(TargetFramework)/publish/Library" SkipUnchangedFiles="false" />
