@@ -2,6 +2,10 @@
 
 Toy Language Interpreter using Sprache, a C# Parser Combinator language.
 
+## Version
+
+0.1
+
 ## What is this
 
 This is an interpreter of YuchiKaml, a toy language designed by me.
@@ -29,7 +33,7 @@ make
 
 YuchiKaml is a dynamic-typed langauge with ML-like surface grammar.
 
-See [GCD example](https://github.com/yuchiki/YuchiKaml/blob/master/Samples/gcd) and the  [document](https://github.com/yuchiki/YuchiKaml_Document/blob/master/document.pdf).
+See [GCD example](https://github.com/yuchiki/YuchiKaml/blob/master/Samples/gcd) and the [document](https://github.com/yuchiki/YuchiKaml_Document/blob/master/document.pdf).
 
 #### Comment
 
